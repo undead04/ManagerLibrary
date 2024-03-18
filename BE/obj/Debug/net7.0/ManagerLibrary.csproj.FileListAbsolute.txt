@@ -172,3 +172,7 @@ D:\ManageLibrary\BE\obj\Debug\net7.0\refint\ManagerLibrary.dll
 D:\ManageLibrary\BE\obj\Debug\net7.0\ManagerLibrary.pdb
 D:\ManageLibrary\BE\obj\Debug\net7.0\ManagerLibrary.genruntimeconfig.cache
 D:\ManageLibrary\BE\obj\Debug\net7.0\ref\ManagerLibrary.dll
+D:\ManageLibrary\BE\bin\Debug\net7.0\appsettingsExample.json
+D:\ManageLibrary\BE\bin\Debug\net7.0\FluentValidation.dll
+D:\ManageLibrary\BE\bin\Debug\net7.0\FluentValidation.AspNetCore.dll
+D:\ManageLibrary\BE\bin\Debug\net7.0\FluentValidation.DependencyInjectionExtensions.dll

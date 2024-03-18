@@ -6,7 +6,7 @@ namespace ManagerLibrary.Repository.CategoryReponsitory
 {
     public interface ICategoryReponsitory
     {
-        Task CreateCategory(CategoryModel model);
+        Task<int> CreateCategory(CategoryModel model);
         Task UpdateCategory(int id,CategoryModel model);
         Task DeleteCategory(int id);
         Task<DTOCategory> GetCategory(int id);
