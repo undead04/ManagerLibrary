@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\ManageLibrary\\BE\\ManagerLibrary.csproj": {}
+    "D:\\space\\project\\ManagerLibrary\\BE\\ManagerLibrary.csproj": {}
   },
   "projects": {
-    "D:\\ManageLibrary\\BE\\ManagerLibrary.csproj": {
+    "D:\\space\\project\\ManagerLibrary\\BE\\ManagerLibrary.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\ManageLibrary\\BE\\ManagerLibrary.csproj",
+        "projectUniqueName": "D:\\space\\project\\ManagerLibrary\\BE\\ManagerLibrary.csproj",
         "projectName": "ManagerLibrary",
-        "projectPath": "D:\\ManageLibrary\\BE\\ManagerLibrary.csproj",
-        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "D:\\ManageLibrary\\BE\\obj\\",
+        "projectPath": "D:\\space\\project\\ManagerLibrary\\BE\\ManagerLibrary.csproj",
+        "packagesPath": "C:\\Users\\thanh\\.nuget\\packages\\",
+        "outputPath": "D:\\space\\project\\ManagerLibrary\\BE\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\thanh\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,7 +22,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\sdk\\7.0.304\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -97,7 +96,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     }

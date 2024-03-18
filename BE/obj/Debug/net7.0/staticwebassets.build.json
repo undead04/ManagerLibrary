@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "THQxNOEqN/PX8u76ZKzQhwnclBM8QKw06mDMDW7sqek=",
+  "Hash": "HBGAdFNteQWRcltLeQWQHKdnhZebRTdzOiB/Vrup8+o=",
   "Source": "ManagerLibrary",
   "BasePath": "_content/ManagerLibrary",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "ManagerLibrary\\wwwroot",
       "Source": "ManagerLibrary",
-      "ContentRoot": "D:\\ManageLibrary\\BE\\wwwroot\\",
+      "ContentRoot": "D:\\space\\project\\ManagerLibrary\\BE\\wwwroot\\",
       "BasePath": "_content/ManagerLibrary",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "D:\\ManageLibrary\\BE\\wwwroot\\Uploads\\Avatar\\4-12-03-2024-download.png",
+      "Identity": "D:\\space\\project\\ManagerLibrary\\BE\\wwwroot\\Uploads\\Avatar\\4-12-03-2024-download.png",
       "SourceId": "ManagerLibrary",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\ManageLibrary\\BE\\wwwroot\\",
+      "ContentRoot": "D:\\space\\project\\ManagerLibrary\\BE\\wwwroot\\",
       "BasePath": "_content/ManagerLibrary",
       "RelativePath": "Uploads/Avatar/4-12-03-2024-download.png",
       "AssetKind": "All",
@@ -34,10 +34,10 @@
       "OriginalItemSpec": "wwwroot\\Uploads\\Avatar\\4-12-03-2024-download.png"
     },
     {
-      "Identity": "D:\\ManageLibrary\\BE\\wwwroot\\Uploads\\Book\\20-12-03-2024-z5173150057277_b2deb077b45e881eef37df55e60e82b8.jpg",
+      "Identity": "D:\\space\\project\\ManagerLibrary\\BE\\wwwroot\\Uploads\\Book\\20-12-03-2024-z5173150057277_b2deb077b45e881eef37df55e60e82b8.jpg",
       "SourceId": "ManagerLibrary",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\ManageLibrary\\BE\\wwwroot\\",
+      "ContentRoot": "D:\\space\\project\\ManagerLibrary\\BE\\wwwroot\\",
       "BasePath": "_content/ManagerLibrary",
       "RelativePath": "Uploads/Book/20-12-03-2024-z5173150057277_b2deb077b45e881eef37df55e60e82b8.jpg",
       "AssetKind": "All",

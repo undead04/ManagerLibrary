@@ -77,6 +77,12 @@ const CategoryForm = ({
 								initialValue={edittingCategory?.name}
 								name={"name"}
 								label="Category name:"
+								rules={[
+									{
+										required: true,
+										message: "This field is required",
+									},
+								]}
 							>
 								<Input />
 							</Form.Item>
