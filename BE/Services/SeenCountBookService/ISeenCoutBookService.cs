@@ -1,0 +1,4 @@
+﻿namespace ManagerLibrary.Services.SeenCountBookService
+{
+    
+}

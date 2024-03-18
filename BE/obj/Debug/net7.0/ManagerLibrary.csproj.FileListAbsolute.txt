@@ -172,6 +172,7 @@ D:\ManageLibrary\BE\obj\Debug\net7.0\refint\ManagerLibrary.dll
 D:\ManageLibrary\BE\obj\Debug\net7.0\ManagerLibrary.pdb
 D:\ManageLibrary\BE\obj\Debug\net7.0\ManagerLibrary.genruntimeconfig.cache
 D:\ManageLibrary\BE\obj\Debug\net7.0\ref\ManagerLibrary.dll
+<<<<<<< HEAD
 D:\space\project\ManagerLibrary\BE\bin\Debug\net7.0\appsettings.Development.json
 D:\space\project\ManagerLibrary\BE\bin\Debug\net7.0\appsettings.json
 D:\space\project\ManagerLibrary\BE\bin\Debug\net7.0\appsettingsExample.json
@@ -260,3 +261,9 @@ D:\space\project\ManagerLibrary\BE\obj\Debug\net7.0\refint\ManagerLibrary.dll
 D:\space\project\ManagerLibrary\BE\obj\Debug\net7.0\ManagerLibrary.pdb
 D:\space\project\ManagerLibrary\BE\obj\Debug\net7.0\ManagerLibrary.genruntimeconfig.cache
 D:\space\project\ManagerLibrary\BE\obj\Debug\net7.0\ref\ManagerLibrary.dll
+=======
+D:\ManageLibrary\BE\bin\Debug\net7.0\appsettingsExample.json
+D:\ManageLibrary\BE\bin\Debug\net7.0\FluentValidation.dll
+D:\ManageLibrary\BE\bin\Debug\net7.0\FluentValidation.AspNetCore.dll
+D:\ManageLibrary\BE\bin\Debug\net7.0\FluentValidation.DependencyInjectionExtensions.dll
+>>>>>>> c77957331bda6d10ab0e3dca8337228ddcbf1748

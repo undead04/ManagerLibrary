@@ -14,7 +14,7 @@ namespace ManagerLibrary.Repository.CategoryReponsitory
         {
             this.context = context;
         }
-        public async Task CreateCategory(CategoryModel model)
+        public async Task<int> CreateCategory(CategoryModel model)
         {
             var category = new Category
             {
@@ -23,6 +23,7 @@ namespace ManagerLibrary.Repository.CategoryReponsitory
             };
             await context.categories.AddAsync(category);
             await context.SaveChangesAsync();
+            return category.CategoryId;
         }
 
         public async Task DeleteCategory(int id)

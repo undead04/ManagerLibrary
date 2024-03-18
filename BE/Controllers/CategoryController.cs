@@ -2,6 +2,7 @@
 using ManagerLibrary.Model.DTO;
 using ManagerLibrary.Models;
 using ManagerLibrary.Repository.CategoryReponsitory;
+using ManagerLibrary.Validation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,10 +13,12 @@ namespace ManagerLibrary.Controllers
     public class CategoryController : ControllerBase
     {
         private ICategoryReponsitory categoryReponsitory;
+        private readonly ValidationCategory validation;
 
-        public CategoryController(ICategoryReponsitory categoryReponsitory) 
+        public CategoryController(ICategoryReponsitory categoryReponsitory,ValidationCategory validations) 
         {
             this.categoryReponsitory = categoryReponsitory;
+            this.validation = validations;
         }
         [HttpGet]
         public async Task<IActionResult> GetAllCategory()
@@ -60,6 +63,7 @@ namespace ManagerLibrary.Controllers
                 {
                     return NotFound();
                 }
+                
                 await categoryReponsitory.DeleteCategory(Id);
                 return Ok(Repository<string>.WithMessage("Xóa thể loại thành công", 200));
             }
@@ -73,7 +77,22 @@ namespace ManagerLibrary.Controllers
         {
             try
             {
+                var validationValue = new CategoryValidationModel
+                {
+                    Id = Id,
+                    Description = model.Description,
+                    Name = model.Name,
+                };
+                var validationResult = validation.Validate(validationValue);
+                if (!validationResult.IsValid)
+                {
+                    var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage }).ToList();
+                    var response = errors
+                    .ToDictionary(x => $"{x.PropertyName}", x => x.ErrorMessage);
 
+                    return Ok(Repository<Dictionary<string, string>>.WithMessage(response, 400));
+
+                }
                 var categorys = await categoryReponsitory.GetCategory(Id);
                 if (categorys == null)
                 {
@@ -92,10 +111,25 @@ namespace ManagerLibrary.Controllers
         {
             try
             {
+                var validationValue = new CategoryValidationModel
+                {
+                    Id=0,
+                    Description=model.Description,
+                    Name=model.Name,
+                };
+                var validationResult=validation.Validate(validationValue);
+                if (!validationResult.IsValid)
+                {
+                    var errors = validationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage }).ToList();
+                    var response = errors
+                    .ToDictionary(x => $"{x.PropertyName}", x => x.ErrorMessage);
 
-                
-                await categoryReponsitory.CreateCategory(model);
-                return Ok(Repository<string>.WithMessage("Tạo thể loại thành công", 200));
+                    return Ok(Repository<Dictionary<string, string>>.WithMessage(response, 400));
+
+                }
+
+                int id= await categoryReponsitory.CreateCategory(model);
+                return Ok(Repository<int>.WithData(id, 200));
             }
             catch
             {
