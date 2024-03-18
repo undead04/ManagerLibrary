@@ -1,0 +1,29 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\Admin\\source\\repos\\ManagerLibrary\\ManagerLibrary\\wwwroot\\Uploads\\Avatar\\4-12-03-2024-download.png",
+      "PackagePath": "staticwebassets\\Uploads\\Avatar\\4-12-03-2024-download.png"
+    },
+    {
+      "Id": "C:\\Users\\Admin\\source\\repos\\ManagerLibrary\\ManagerLibrary\\wwwroot\\Uploads\\Book\\20-12-03-2024-z5173150057277_b2deb077b45e881eef37df55e60e82b8.jpg",
+      "PackagePath": "staticwebassets\\Uploads\\Book\\20-12-03-2024-z5173150057277_b2deb077b45e881eef37df55e60e82b8.jpg"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.ManagerLibrary.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.build.ManagerLibrary.props",
+      "PackagePath": "build\\ManagerLibrary.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildMultiTargeting.ManagerLibrary.props",
+      "PackagePath": "buildMultiTargeting\\ManagerLibrary.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildTransitive.ManagerLibrary.props",
+      "PackagePath": "buildTransitive\\ManagerLibrary.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
