@@ -90,7 +90,7 @@ namespace ManagerLibrary.Controllers
                     var response = errors
                     .ToDictionary(x => $"{x.PropertyName}", x => x.ErrorMessage);
 
-                    return Ok(Repository<Dictionary<string, string>>.WithMessage(response, 400));
+                    return BadRequest(Repository<Dictionary<string, string>>.WithMessage(response, 400));
 
                 }
                 var categorys = await categoryReponsitory.GetCategory(Id);
@@ -129,7 +129,7 @@ namespace ManagerLibrary.Controllers
                 }
 
                 int id= await categoryReponsitory.CreateCategory(model);
-                return Ok(Repository<int>.WithData(id, 200));
+                return BadRequest(Repository<int>.WithData(id, 200));
             }
             catch
             {
