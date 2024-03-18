@@ -68,7 +68,7 @@ builder.Services.AddAuthentication(option =>
 // add cors
 builder.Services.AddCors(option =>
 {
-    option.AddDefaultPolicy(builder =>
+    option.AddPolicy("test",builder =>
     {
         builder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin();
     });
@@ -101,7 +101,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAuthorization();
-
+app.UseCors("test");
 app.MapControllers();
 
 app.Run();

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "9oS/mvPCjUUlfOcyBsxvdaziBSkdP3kDmUEj2bycjs4dC9jn5JEL10p1COD/1FKfXZdVzN4A4VYxWF64nOe29g==",
+  "dgSpecHash": "63DQ93KjwW2OW/NSDRrPXBdhb2V0YO4VlbAWYNGd5q7BEyRniIqWaGFWEBj7X/0/nQEf2x58kfm4Qo4aZjtCfw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Admin\\source\\repos\\ManagerLibrary\\ManagerLibrary\\ManagerLibrary.csproj",
+  "projectFilePath": "D:\\ManageLibrary\\BE\\ManagerLibrary.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Admin\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
