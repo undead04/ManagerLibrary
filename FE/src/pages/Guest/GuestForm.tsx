@@ -2,6 +2,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import {
 	Button,
 	Checkbox,
+	Divider,
 	Form,
 	Input,
 	InputNumber,
@@ -30,9 +31,9 @@ const GuestForm = () => {
 
 			<div className="mt-8">
 				<Form
-					labelCol={{ span: 6 }}
-					wrapperCol={{ span: 14 }}
-					layout="horizontal"
+					labelCol={{ span: 4 }}
+					wrapperCol={{ span: 20 }}
+					layout="vertical"
 				>
 					<div className="grid grid-cols-2">
 						<div>
@@ -52,6 +53,23 @@ const GuestForm = () => {
 									<Radio value={false}> Female </Radio>
 								</Radio.Group>
 							</Form.Item>
+						</div>
+
+						<div>
+							<Form.Item label="Address:">
+								<Input />
+							</Form.Item>
+							<Form.Item label="ID number:">
+								<Input />
+							</Form.Item>
+							<Form.Item label="Nationality:">
+								<Select>
+									<Select.Option>VietNam</Select.Option>
+									<Select.Option>Japan</Select.Option>
+									<Select.Option>China</Select.Option>
+								</Select>
+							</Form.Item>
+
 							<Form.Item
 								label="Images"
 								valuePropName="fileList"
@@ -69,8 +87,8 @@ const GuestForm = () => {
 							</Form.Item>
 						</div>
 					</div>
-
-					<div className="flex gap-4 justify-end">
+					<Divider />
+					<div className="flex gap-4 justify-center">
 						<Form.Item>
 							<Button type="primary" htmlType="submit" size="large">
 								Save

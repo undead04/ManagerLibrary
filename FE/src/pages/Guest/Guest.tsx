@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { Button, Table } from "antd";
+import { Button, Input, Table } from "antd";
 import type { TableColumnsType } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import type { SearchProps } from "antd/es/input/Search";
 
+const { Search } = Input;
 interface DataType {
 	key: React.Key;
 	username: string;
@@ -114,7 +116,8 @@ const Guest = () => {
 		onChange: onSelectChange,
 	};
 	const hasSelected = selectedRowKeys.length > 0;
-
+	const onSearch: SearchProps["onSearch"] = (value, _e, info) =>
+		console.log(info?.source, value);
 	return (
 		<div>
 			<div className="text-3xl font-semibold my-2">Guests - List</div>
@@ -133,6 +136,14 @@ const Guest = () => {
 						? `Selected ${selectedRowKeys.length} items`
 						: ""}
 				</span>
+			</div>
+
+			<div className="mb-4">
+				<Search
+					placeholder="Search for guest"
+					onSearch={onSearch}
+					enterButton
+				/>
 			</div>
 			<Table
 				onRow={(book) => {

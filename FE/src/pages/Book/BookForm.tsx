@@ -31,10 +31,10 @@ const BookForm = () => {
 			<div className="mt-8">
 				<Form
 					labelCol={{ span: 4 }}
-					wrapperCol={{ span: 14 }}
+					wrapperCol={{ span: 20 }}
 					layout="horizontal"
 				>
-					<div className="grid grid-cols-2">
+					<div className="">
 						<div>
 							<Form.Item label="Title:">
 								<Input />

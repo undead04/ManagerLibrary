@@ -5,7 +5,9 @@ import {
 	DesktopOutlined,
 	GroupOutlined,
 	HomeOutlined,
+	KeyOutlined,
 	MailOutlined,
+	PlusCircleOutlined,
 	UserOutlined,
 	UsergroupAddOutlined,
 } from "@ant-design/icons";
@@ -34,7 +36,18 @@ function getItem(
 
 const items: MenuItem[] = [
 	getItem(<Link to={"/home"}>Home</Link>, "home", <HomeOutlined />),
-	getItem(<Link to={"/book"}>Books</Link>, "book", <BookOutlined />),
+	getItem(<Link to={"/book"}>Books</Link>, "book", <BookOutlined />, [
+		getItem(
+			<Link to={"/book"}>Books View</Link>,
+			"bookView",
+			<BookOutlined />,
+		),
+		getItem(
+			<Link to={"/book/entry"}>Book Entry</Link>,
+			"bookEntry",
+			<PlusCircleOutlined />,
+		),
+	]),
 	getItem(
 		<Link to={"/staff"}>Staffs</Link>,
 		"staff",
@@ -66,6 +79,11 @@ const items: MenuItem[] = [
 		<Link to={"/income"}>Income</Link>,
 		"income",
 		<AppstoreOutlined />,
+	),
+	getItem(
+		<Link to={"/authorization"}>Authorization</Link>,
+		"authorization",
+		<KeyOutlined />,
 	),
 ];
 

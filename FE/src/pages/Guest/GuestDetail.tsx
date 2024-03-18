@@ -1,4 +1,8 @@
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import {
+	DeleteOutlined,
+	EditOutlined,
+	StopOutlined,
+} from "@ant-design/icons";
 import React, { useState } from "react";
 import { Button, Table, Descriptions, Divider, Image } from "antd";
 import type { TableColumnsType } from "antd";
@@ -46,7 +50,7 @@ const columns: TableColumnsType<DataType> = [
 			return (
 				<Link
 					className="text-blue-500 underline"
-					to={`/coupon/d/${id} `}
+					to={`/library/coupon/d/${id} `}
 				>
 					Details
 				</Link>
@@ -70,6 +74,16 @@ const GuessDetail = () => {
 	const navigate = useNavigate();
 	return (
 		<div>
+			<div className="ml-auto w-fit mb-4">
+				<Button
+					type="primary"
+					icon={<StopOutlined />}
+					size={"middle"}
+					danger
+				>
+					Ban / Unban
+				</Button>
+			</div>
 			<div className="ml-auto w-fit flex items-center gap-2">
 				<Button
 					type="primary"

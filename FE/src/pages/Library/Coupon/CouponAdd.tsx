@@ -144,6 +144,8 @@ const CouponAdd = () => {
 			<div className="text-3xl font-semibold my-2">
 				{id ? "Edit Borrow Counpon " : "Add a new Borrow Counpon"}
 			</div>
+
+			<Divider />
 			<Form>
 				<Descriptions title="Choose a Guest"></Descriptions>
 				<DebounceSelect

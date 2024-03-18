@@ -86,6 +86,25 @@ const CouponDetail = () => {
 					</Descriptions.Item>
 					<Descriptions.Item label="Gender">Female</Descriptions.Item>
 				</Descriptions>
+
+				<Divider />
+				<Descriptions title="More info">
+					<Descriptions.Item label="State">
+						<div className="flex items-center gap-1">
+							<div>Returned</div>
+							<div className="w-2 h-2 rounded-full bg-green-500"></div>
+						</div>
+					</Descriptions.Item>
+					<Descriptions.Item label="Create at">
+						22/02/2023
+					</Descriptions.Item>
+					<Descriptions.Item label="Expired at">
+						22/04/2023
+					</Descriptions.Item>
+					<Descriptions.Item label="Return at">
+						10/03/2022
+					</Descriptions.Item>
+				</Descriptions>
 			</div>
 		</div>
 	);

@@ -30,11 +30,11 @@ const StaffForm = () => {
 
 			<div className="mt-8">
 				<Form
-					labelCol={{ span: 6 }}
-					wrapperCol={{ span: 14 }}
+					labelCol={{ span: 4 }}
+					wrapperCol={{ span: 20 }}
 					layout="horizontal"
 				>
-					<div className="grid grid-cols-2">
+					<div className="">
 						<div>
 							<Form.Item label="Username:">
 								<Input />

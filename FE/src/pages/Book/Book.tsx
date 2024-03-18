@@ -1,8 +1,17 @@
 import React, { useState } from "react";
-import { Button, Table } from "antd";
+import { Button, Input, Modal, Space, Table } from "antd";
 import type { TableColumnsType } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import {
+	DeleteOutlined,
+	EditOutlined,
+	PlusCircleOutlined,
+} from "@ant-design/icons";
+
+import type { SearchProps } from "antd/es/input/Search";
+import BookForm from "./BookForm";
+
+const { Search } = Input;
 
 interface DataType {
 	key: React.Key;
@@ -87,7 +96,15 @@ const Book = () => {
 		[],
 	);
 	const [loading, setLoading] = useState(false);
+	// Modal
+	const [open, setOpen] = useState(false);
+	const showModal = () => {
+		setOpen(true);
+	};
 
+	const hideModal = () => {
+		setOpen(false);
+	};
 	const start = () => {
 		setLoading(true);
 		// ajax request after empty completing
@@ -107,25 +124,56 @@ const Book = () => {
 		onChange: onSelectChange,
 	};
 	const hasSelected = selectedRowKeys.length > 0;
+	const onSearch: SearchProps["onSearch"] = (value, _e, info) =>
+		console.log(info?.source, value);
 
 	return (
 		<div>
+			<Modal
+				width={800}
+				open={open}
+				onOk={hideModal}
+				onCancel={hideModal}
+				footer={null}
+			>
+				<BookForm />
+			</Modal>
+
 			<div className="text-3xl font-semibold my-2">Books - List</div>
 
-			<div style={{ marginBottom: 16 }}>
-				<Button
-					type="primary"
-					onClick={start}
-					disabled={!hasSelected}
-					loading={loading}
-				>
-					Reload
-				</Button>
-				<span style={{ marginLeft: 8 }}>
-					{hasSelected
-						? `Selected ${selectedRowKeys.length} items`
-						: ""}
-				</span>
+			<div className="mb-4 flex items-center justify-between">
+				<div>
+					<Button
+						type="primary"
+						onClick={start}
+						disabled={!hasSelected}
+						loading={loading}
+					>
+						Reload
+					</Button>
+					<span style={{ marginLeft: 8 }}>
+						{hasSelected
+							? `Selected ${selectedRowKeys.length} items`
+							: ""}
+					</span>
+				</div>
+
+				<div>
+					<Button
+						type="primary"
+						icon={<PlusCircleOutlined />}
+						onClick={showModal}
+					>
+						Add
+					</Button>
+				</div>
+			</div>
+			<div className="mb-4">
+				<Search
+					placeholder="input search text"
+					onSearch={onSearch}
+					enterButton
+				/>
 			</div>
 			<Table
 				onRow={(book) => {

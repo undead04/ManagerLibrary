@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Button, Table } from "antd";
+import { Button, Input, Table } from "antd";
 import type { TableColumnsType } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
+const { Search } = Input;
 interface DataType {
 	key: React.Key;
 	username: string;
@@ -58,7 +59,7 @@ const columns: TableColumnsType<DataType> = [
 			return (
 				<Link
 					className="text-blue-500 underline"
-					to={`/Library/d/${id} `}
+					to={`/library/coupon/d/${id} `}
 				>
 					Details
 				</Link>
@@ -72,7 +73,7 @@ const columns: TableColumnsType<DataType> = [
 			return (
 				<Link
 					className="text-blue-500 underline"
-					to={`/Library/edit/${id} `}
+					to={`/library/coupon/e/${id} `}
 				>
 					<EditOutlined />
 				</Link>
@@ -153,6 +154,13 @@ const Library = () => {
 						? `Selected ${selectedRowKeys.length} items`
 						: ""}
 				</span>
+			</div>
+
+			<div className="mb-4">
+				<Search
+					placeholder="Search for username and book"
+					enterButton
+				/>
 			</div>
 			<Table
 				onRow={(book) => {

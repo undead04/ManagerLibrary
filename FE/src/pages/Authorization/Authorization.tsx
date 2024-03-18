@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Input, Modal, Table } from "antd";
+import { Button, Input, Modal, Space, Table } from "antd";
 import type { TableColumnsType } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -7,37 +7,20 @@ import {
 	EditOutlined,
 	PlusCircleOutlined,
 } from "@ant-design/icons";
-import StaffForm from "./StaffForm";
+
 import type { SearchProps } from "antd/es/input/Search";
+import AuthorizationForm from "./AuthorizationForm";
 
 const { Search } = Input;
 
 interface DataType {
 	key: React.Key;
-	username: string;
-	phoneNumber: string;
-	email: string;
 	role: string;
-	gender: boolean;
 }
 
 const columns: TableColumnsType<DataType> = [
 	{
-		title: "Username",
-		dataIndex: "username",
-	},
-	{
-		title: "Email",
-		dataIndex: "email",
-	},
-
-	{
-		title: "Gender",
-		dataIndex: "gender",
-		render: (gender: boolean) => (gender ? "Male" : "Female"),
-	},
-	{
-		title: "Roles",
+		title: "Role",
 		dataIndex: "role",
 	},
 	{
@@ -47,21 +30,7 @@ const columns: TableColumnsType<DataType> = [
 			return (
 				<Link
 					className="text-blue-500 underline"
-					to={`/staff/d/${id} `}
-				>
-					Details
-				</Link>
-			);
-		},
-	},
-	{
-		title: "",
-		dataIndex: "key",
-		render: (id: string) => {
-			return (
-				<Link
-					className="text-blue-500 underline"
-					to={`/staff/e/${id} `}
+					to={`/Authorization/edit/${id} `}
 				>
 					<EditOutlined />
 				</Link>
@@ -75,7 +44,7 @@ const columns: TableColumnsType<DataType> = [
 			return (
 				<Link
 					className="text-red-500 underline"
-					to={`/staff/delete/${id} `}
+					to={`/Authorization/delete/${id} `}
 				>
 					<DeleteOutlined />
 				</Link>
@@ -88,21 +57,16 @@ const data: DataType[] = [];
 for (let i = 0; i < 46; i++) {
 	data.push({
 		key: i,
-		username: `Staff ${i}`,
-		email: `Author${i}@gmail.com`,
-		gender: i % 2 == 0 ? true : false,
-		phoneNumber: `000000000${i}`,
-		role: "Staff",
+		role: `Admin ${i}`,
 	});
 }
 
-const Staff = () => {
+const Authorization = () => {
 	const navigate = useNavigate();
 	const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>(
 		[],
 	);
 	const [loading, setLoading] = useState(false);
-
 	// Modal
 	const [open, setOpen] = useState(false);
 	const showModal = () => {
@@ -112,7 +76,6 @@ const Staff = () => {
 	const hideModal = () => {
 		setOpen(false);
 	};
-
 	const start = () => {
 		setLoading(true);
 		// ajax request after empty completing
@@ -144,9 +107,12 @@ const Staff = () => {
 				onCancel={hideModal}
 				footer={null}
 			>
-				<StaffForm />
+				<AuthorizationForm />
 			</Modal>
-			<div className="text-3xl font-semibold my-2">Staffs - List</div>
+
+			<div className="text-3xl font-semibold my-2">
+				Authorization - List
+			</div>
 
 			<div className="mb-4 flex items-center justify-between">
 				<div>
@@ -175,7 +141,6 @@ const Staff = () => {
 					</Button>
 				</div>
 			</div>
-
 			<div className="mb-4">
 				<Search
 					placeholder="input search text"
@@ -183,13 +148,12 @@ const Staff = () => {
 					enterButton
 				/>
 			</div>
-
 			<Table
-				onRow={(book) => {
+				onRow={(Authorization) => {
 					return {
 						onDoubleClick: (event) => {
 							event.preventDefault();
-							navigate(`/book/d/${book.key}`);
+							navigate(`/Authorization/d/${Authorization.key}`);
 						},
 					};
 				}}
@@ -201,4 +165,4 @@ const Staff = () => {
 	);
 };
 
-export default Staff;
+export default Authorization;

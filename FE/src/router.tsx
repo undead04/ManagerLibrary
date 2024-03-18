@@ -19,6 +19,9 @@ import CouponAdd from "./pages/Library/Coupon/CouponAdd";
 import Category from "./pages/Category/Category";
 import CategoryForm from "./pages/Category/CategoryForm";
 import Income from "./pages/Income/Income";
+import Authorization from "./pages/Authorization/Authorization";
+import AuthorizationForm from "./pages/Authorization/AuthorizationForm";
+import BookEntryForm from "./pages/Book/BookEntryForm";
 
 const router = createBrowserRouter([
 	{
@@ -40,8 +43,8 @@ const router = createBrowserRouter([
 		element: <UserLayout />,
 		children: [
 			{
-				path: "/test",
-				element: <div> Hello world </div>,
+				path: "/",
+				element: <Home />,
 			},
 			{
 				path: "/home",
@@ -50,6 +53,10 @@ const router = createBrowserRouter([
 			{
 				path: "/book",
 				element: <Book />,
+			},
+			{
+				path: "/book/entry",
+				element: <BookEntryForm />,
 			},
 			{
 				path: "/book/d/:id",
@@ -70,6 +77,10 @@ const router = createBrowserRouter([
 			{
 				path: "/staff/d/:id",
 				element: <StaffDetail />,
+			},
+			{
+				path: "/staff/e/:id",
+				element: <StaffForm />,
 			},
 			{
 				path: "/staff/add",
@@ -97,6 +108,10 @@ const router = createBrowserRouter([
 				element: <CouponDetail />,
 			},
 			{
+				path: "/library/coupon/e/:id",
+				element: <CouponAdd />,
+			},
+			{
 				path: "/library/coupon/add",
 				element: <CouponAdd />,
 			},
@@ -115,6 +130,10 @@ const router = createBrowserRouter([
 			{
 				path: "/income",
 				element: <Income />,
+			},
+			{
+				path: "/authorization",
+				element: <Authorization />,
 			},
 		],
 	},
