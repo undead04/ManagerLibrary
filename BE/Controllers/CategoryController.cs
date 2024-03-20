@@ -1,6 +1,7 @@
 ﻿using ManagerLibrary.Model;
 using ManagerLibrary.Model.DTO;
 using ManagerLibrary.Models;
+using ManagerLibrary.Repository.BookReponsitory;
 using ManagerLibrary.Repository.CategoryReponsitory;
 using ManagerLibrary.Validation;
 using Microsoft.AspNetCore.Http;
@@ -14,19 +15,21 @@ namespace ManagerLibrary.Controllers
     {
         private ICategoryReponsitory categoryReponsitory;
         private readonly ValidationCategory validation;
+        private readonly IBookReponsitory bookRepository;
 
-        public CategoryController(ICategoryReponsitory categoryReponsitory,ValidationCategory validations) 
+        public CategoryController(ICategoryReponsitory categoryReponsitory,ValidationCategory validations,IBookReponsitory bookReponsitory) 
         {
             this.categoryReponsitory = categoryReponsitory;
             this.validation = validations;
+            this.bookRepository = bookReponsitory;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllCategory()
+        public async Task<IActionResult> GetAllCategory(string?search)
         {
             try
             {
 
-                var categorys= await categoryReponsitory.GetAllCategories();
+                var categorys= await categoryReponsitory.GetAllCategories(search);
                 return Ok(Repository<List<DTOCategory>>.WithData(categorys, 200));
             }
             catch
@@ -63,7 +66,11 @@ namespace ManagerLibrary.Controllers
                 {
                     return NotFound();
                 }
-                
+                var books =await bookRepository.getAllBook(string.Empty, Id);
+                if(books.Count>0)
+                {
+                    return BadRequest(Repository<string>.WithMessage("Thể loại này đã có sách không được xóa",400));
+                }
                 await categoryReponsitory.DeleteCategory(Id);
                 return Ok(Repository<string>.WithMessage("Xóa thể loại thành công", 200));
             }

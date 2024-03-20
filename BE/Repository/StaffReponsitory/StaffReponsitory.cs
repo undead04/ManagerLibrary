@@ -2,6 +2,7 @@
 using ManagerLibrary.Models;
 using ManagerLibrary.Models.DTO;
 using ManagerLibrary.Repository.PasswordRepository;
+using ManagerLibrary.Services.UpLoadService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,16 +15,18 @@ namespace ManagerLibrary.Repository.StaffReponsitory
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly IPasswordRepository passwordRepository;
+        private readonly IUploadService uploadService;
 
         public StaffReponsitory(MyDb context,UserManager<ApplicationUser> userManager,RoleManager<IdentityRole> roleManager,
-            IPasswordRepository passwordRepository)
+            IPasswordRepository passwordRepository,IUploadService uploadService)
         {
             this.context = context;
             this.userManager = userManager;
             this.roleManager = roleManager;
             this.passwordRepository=passwordRepository;
+            this.uploadService = uploadService;
         }
-        public async Task<IdentityResult> CreateStaff(StaffModel model)
+        public async Task<string> CreateStaff(StaffModel model)
         {
             var user = new ApplicationUser
             {
@@ -47,7 +50,17 @@ namespace ManagerLibrary.Repository.StaffReponsitory
 
 
             }
-            return result;
+            if(model.Avatar!=null)
+            {
+                if(model.Avatar.Length>0)
+                {
+                    string avatar= await uploadService.UploadImage<string>(user.Id, "Avatar", model.Avatar);
+                    user.Avatar = avatar;
+                    await userManager.UpdateAsync(user);
+                }
+               
+            }
+            return user.Id;
         }
 
         public async Task DeleteStaff(string Id)
@@ -79,7 +92,7 @@ namespace ManagerLibrary.Repository.StaffReponsitory
                     Address = us.Address,
                     Gender = us.Gender,
                     Role = String.Join("",roles),
-
+                    UrlAvatar=uploadService.GetUrlImage(us.Avatar),
                 };
             }).ToList();
 
@@ -109,6 +122,7 @@ namespace ManagerLibrary.Repository.StaffReponsitory
                     Address = user.Address,
                     Gender = user.Gender,
                     Role = String.Join("", roles),
+                    UrlAvatar = uploadService.GetUrlImage(user.Avatar),
 
                 };
             }
@@ -126,6 +140,16 @@ namespace ManagerLibrary.Repository.StaffReponsitory
                 user.Phone = model.Phone;
                 user.Gender = model.Gender;
                 user.Email = model.Email;
+                if (model.Avatar != null)
+                {
+                    if (model.Avatar.Length > 0)
+                    {
+                        uploadService.DeleteImage("Avatar", user.Avatar);
+                       string avatar= await uploadService.UploadImage<string>(user.Id, "Avatar", model.Avatar);
+                        user.Avatar = avatar;
+                    }
+
+                }
                 await userManager.UpdateAsync(user);
             }
         }

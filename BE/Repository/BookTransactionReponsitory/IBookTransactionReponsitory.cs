@@ -13,6 +13,7 @@ namespace ManagerLibrary.Repository.BookTransactionReponsitory
         Task<List<DTOBookTranstion>> GetAllUnpaidBook();
         Task<List<DTOBookTranstionDetail>> UnpaidBookDetail(int Id);
         Task CreateReturnBook(int[] Id);
+        bool IsBorrowBookMember(int Id);
         
        
     }

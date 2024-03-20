@@ -18,7 +18,7 @@ namespace ManagerLibrary.Services.UpLoadService
 
        
 
-       public async Task<string> UploadImage(int id,string procode,IFormFile image)
+       public async Task<string> UploadImage<T>(T? id,string procode,IFormFile image)
         {
             string nameImage = Path.GetFileNameWithoutExtension(image.FileName);
             string nameExtension = Path.GetExtension(image.FileName);

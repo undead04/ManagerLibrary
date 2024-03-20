@@ -151,5 +151,9 @@ namespace ManagerLibrary.Repository.BookTransactionReponsitory
             
 
         }
+        public bool IsBorrowBookMember(int Id)
+        {
+            return  context.bookTransactions.Any(bo => bo.MembersId == Id);
+        }
     }
 }

@@ -17,7 +17,7 @@ namespace ManagerLibrary.Repository.MemberReposnitory
             this.context = context;
             this.uploadService=uploadService;
         }
-        public async Task CreateMember(MemberModel model)
+        public async Task<int> CreateMember(MemberModel model)
         {
             
             var member = new Members
@@ -39,6 +39,7 @@ namespace ManagerLibrary.Repository.MemberReposnitory
                     await context.SaveChangesAsync();
                 }
             }
+            return member.Id;
         }
 
         public async Task DeleteMember(int id)
@@ -53,16 +54,23 @@ namespace ManagerLibrary.Repository.MemberReposnitory
             }
         }
 
-        public async Task<List<DTOMember>> GetAllMember()
+        public async Task<List<DTOMember>> GetAllMember(string? search)
         {
-            return await context.members.Select(me => new DTOMember
+
+            var member =  context.members.AsQueryable();
+            if(!String.IsNullOrEmpty(search))
             {
-                Id=me.Id,
-                Name=me.Name,
-                Phone=me.Phone,
-                Address=me.Address,
-                Avatar=me.Avatar,
-                Gender=me.Gender,
+                member=member.Where(me=>me.Name.Contains(search)||me.Phone.Contains(search));
+            }
+            return await member.Select(me => new DTOMember
+            {
+                Id = me.Id,
+                Name = me.Name,
+                Phone = me.Phone,
+                Address = me.Address,
+                Avatar = me.Avatar,
+                Gender = me.Gender,
+                UrlImage = uploadService.GetUrlImage(me.Avatar)
             }).ToListAsync();
         }
 
@@ -81,6 +89,7 @@ namespace ManagerLibrary.Repository.MemberReposnitory
                 Address = member.Address,
                 Gender = member.Gender,
                 Avatar = member.Avatar,
+                UrlImage=uploadService.GetUrlImage(member.Avatar)
             };
         }
 
@@ -103,6 +112,7 @@ namespace ManagerLibrary.Repository.MemberReposnitory
                         await context.SaveChangesAsync();
                     }
                 }
+                await context.SaveChangesAsync();
 
             }
             

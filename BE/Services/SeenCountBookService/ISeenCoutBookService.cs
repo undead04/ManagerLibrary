@@ -1,4 +1,0 @@
-﻿namespace ManagerLibrary.Services.SeenCountBookService
-{
-    
-}

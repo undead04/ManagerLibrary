@@ -6,7 +6,7 @@ namespace ManagerLibrary.Repository.StaffReponsitory
 {
     public interface IStaffReposnitory
     {
-        Task<IdentityResult> CreateStaff(StaffModel model);
+        Task<string> CreateStaff(StaffModel model);
         Task<List<DTOStaff>> GetAllStaff();
         Task<DTOStaff> GetStaff(string Id);
         Task DeleteStaff(string Id);

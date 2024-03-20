@@ -10,7 +10,7 @@ namespace ManagerLibrary.Repository.CategoryReponsitory
         Task UpdateCategory(int id,CategoryModel model);
         Task DeleteCategory(int id);
         Task<DTOCategory> GetCategory(int id);
-        Task<List<DTOCategory>> GetAllCategories();
+        Task<List<DTOCategory>> GetAllCategories(string? search);
 
     }
 }

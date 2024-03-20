@@ -2,6 +2,7 @@
 using ManagerLibrary.Data;
 using ManagerLibrary.Model;
 using ManagerLibrary.Model.DTO;
+using ManagerLibrary.Repository.BookReponsitory;
 using Microsoft.EntityFrameworkCore;
 
 namespace ManagerLibrary.Repository.CategoryReponsitory
@@ -9,10 +10,12 @@ namespace ManagerLibrary.Repository.CategoryReponsitory
     public class CategoryRepository : ICategoryReponsitory
     {
         private readonly MyDb context;
+        
 
         public CategoryRepository(MyDb context) 
         {
             this.context = context;
+            
         }
         public async Task<int> CreateCategory(CategoryModel model)
         {
@@ -36,9 +39,14 @@ namespace ManagerLibrary.Repository.CategoryReponsitory
             }
         }
 
-        public Task<List<DTOCategory>> GetAllCategories()
+        public async Task<List<DTOCategory>> GetAllCategories(string? search)
         {
-          return context.categories.Select(ca=>new DTOCategory {CategoryId=ca.CategoryId,Name = ca.Name, Description = ca.Description }).ToListAsync();
+            var category = context.categories.AsQueryable();
+            if(!String.IsNullOrEmpty(search))
+            {
+                category=category.Where(ca=>ca.Name.Contains(search));
+            }
+            return await category.Select(ca => new DTOCategory { CategoryId = ca.CategoryId, Name = ca.Name, Description = ca.Description }).ToListAsync();
         }
 
         public async Task<DTOCategory> GetCategory(int id)

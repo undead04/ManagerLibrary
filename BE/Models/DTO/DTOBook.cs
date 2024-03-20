@@ -11,6 +11,9 @@ namespace ManagerLibrary.Model.DTO
         public decimal Price { get; set; }
         public string? Image { get; set; }
         public int CategoryId { get; set; }
+        public string NameCategory { get; set; } = string.Empty;
         public string UrlImage { get; set; } = string.Empty;
+        public int Quatity { get; set; }
+        public int PresentQuantity { get; set; }
     }
 }

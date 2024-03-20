@@ -19,14 +19,14 @@ namespace ManagerLibrary.Validation
         public ValidationCategory(MyDb context) 
         { 
             this.context=context;
-            RuleFor(x => x.Name).NotEmpty().WithMessage("Name không đc trống")
+            RuleFor(x => x.Name).NotEmpty().WithMessage("không đc trống")
                  .Custom((name, context) =>
                  {
                      var model = (CategoryValidationModel)context.InstanceToValidate;
 
                      if (!IsNameUnchanged(model) && !IsNameUneque(name))
                      {
-                         context.AddFailure("Name bị trùng");
+                         context.AddFailure("Tên bị trùng");
                      }
                  });
             RuleFor(x => x.Description).NotEmpty().WithMessage("Không được trông");
