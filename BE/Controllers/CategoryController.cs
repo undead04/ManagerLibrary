@@ -131,12 +131,12 @@ namespace ManagerLibrary.Controllers
                     var response = errors
                     .ToDictionary(x => $"{x.PropertyName}", x => x.ErrorMessage);
 
-                    return Ok(Repository<Dictionary<string, string>>.WithMessage(response, 400));
+                    return BadRequest(Repository<Dictionary<string, string>>.WithMessage(response, 400));
 
                 }
 
                 int id= await categoryReponsitory.CreateCategory(model);
-                return BadRequest(Repository<int>.WithData(id, 200));
+                return Ok(Repository<int>.WithData(id, 200));
             }
             catch
             {
