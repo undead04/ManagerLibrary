@@ -9,6 +9,6 @@ namespace ManagerLibrary.Repository.Role
         Task DeleteRole(string Id);
         Task UpdateRole(string Id,RoleModel model);
         Task<List<RoleDTO>> GetAllRole();
-        Task<RoleDTO>GetRole(string Id);
+        Task<RoleDetailDTO> GetRole(string Id);
     }
 }

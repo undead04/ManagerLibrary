@@ -6,6 +6,7 @@ using ManagerLibrary.Repository.BookTransactionReponsitory;
 using ManagerLibrary.Repository.MemberReposnitory;
 using ManagerLibrary.Services.StatisticalService;
 using ManagerLibrary.Validation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,6 +29,7 @@ namespace ManagerLibrary.Controllers
             
         }
         [HttpGet]
+        [Authorize(Policy = "MemberView")]
         public async Task<IActionResult> GetAllMember(string?search)
         {
             try
@@ -79,7 +81,7 @@ namespace ManagerLibrary.Controllers
                     var response = errors
                     .ToDictionary(x => $"{x.PropertyName}", x => x.ErrorMessage);
 
-                    return Ok(Repository<Dictionary<string, string>>.WithMessage(response, 400));
+                    return BadRequest(Repository<Dictionary<string, string>>.WithMessage(response, 400));
 
                 }
                 int id= await memberReponsitory.CreateMember(model);
@@ -117,7 +119,7 @@ namespace ManagerLibrary.Controllers
                     var response = errors
                     .ToDictionary(x => $"{x.PropertyName}", x => x.ErrorMessage);
 
-                    return Ok(Repository<Dictionary<string, string>>.WithMessage(response, 400));
+                    return BadRequest(Repository<Dictionary<string, string>>.WithMessage(response, 400));
 
                 }
                 await memberReponsitory.UpdateMember(Id,model);

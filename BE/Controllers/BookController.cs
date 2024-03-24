@@ -3,7 +3,9 @@ using ManagerLibrary.Model;
 using ManagerLibrary.Model.DTO;
 using ManagerLibrary.Models;
 using ManagerLibrary.Repository.BookReponsitory;
+using ManagerLibrary.Services.AuthencationService;
 using ManagerLibrary.Validation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +13,7 @@ namespace ManagerLibrary.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class BookController : ControllerBase
     {
         private readonly IBookReponsitory bookReponsitory;
@@ -22,6 +25,7 @@ namespace ManagerLibrary.Controllers
             this.validation = validations;
         }
         [HttpGet]
+        [Authorize(Policy ="BookView")]
         public async Task<IActionResult> GetAllBook(string? search, int? categoryId)
         {
             try
@@ -35,6 +39,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpGet("{Id}")]
+        [Authorize(Policy = "BookView")]
         public async Task<IActionResult> GetBook(int Id)
         {
             try
@@ -52,6 +57,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpPost]
+        [Authorize(Policy = "BookEditCreate")]
         public async Task<IActionResult> CreateBook([FromForm] BookModel model)
         {
             try
@@ -84,6 +90,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpPut("{Id}")]
+        [Authorize(Policy = "BookEditCreate")]
         public async Task<IActionResult> UpdateBook(int Id, [FromForm] BookModel model)
         {
             try
@@ -121,6 +128,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpDelete("{Id}")]
+        [Authorize(Policy = "BookDelete")]
         public async Task<IActionResult> DeleteBook(int Id)
         {
             try
@@ -130,7 +138,7 @@ namespace ManagerLibrary.Controllers
                 {
                     return NotFound();
                 }
-                if (book.Quatity > 0)
+                if (book.Quantity > 0)
                 {
                     return BadRequest(Repository<string>.WithMessage("Không thể xóa sách", 400));
                 }

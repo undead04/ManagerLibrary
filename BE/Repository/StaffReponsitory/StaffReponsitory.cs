@@ -37,7 +37,7 @@ namespace ManagerLibrary.Repository.StaffReponsitory
                 Phone = model.Phone,
                
             };
-            var result = await userManager.CreateAsync(user, passwordRepository.CreatePassword());
+            var result = await userManager.CreateAsync(user,model.Password);
             var role = await roleManager.FindByIdAsync(model.RoleId);
             if (result.Succeeded)
             {
@@ -46,8 +46,6 @@ namespace ManagerLibrary.Repository.StaffReponsitory
                     await roleManager.CreateAsync(new IdentityRole(role.Name));
                 }
                 await userManager.AddToRoleAsync(user,role.Name);
-
-
 
             }
             if(model.Avatar!=null)
@@ -76,30 +74,34 @@ namespace ManagerLibrary.Repository.StaffReponsitory
         public async Task<List<DTOStaff>> GetAllStaff()
         {
             var users= await userManager.Users.ToListAsync();
-            var tasks = users.Select(async us =>
+            List<DTOStaff> listStaff = new List<DTOStaff>();
+            foreach(var user in users)
             {
-                var roles = await userManager.GetRolesAsync(us);
+                var roles = await userManager.GetRolesAsync(user);
                 var roleIds = await roleManager.FindByNameAsync(String.Join("", roles));
-
-                return new DTOStaff
+                if(user!=null&&roleIds!=null)
                 {
-                    Id = us.Id,
-                    RoleId = roleIds.Id,
-                    UserName = us.UserName,
-                    Email = us.Email,
-                    Avatar = us.Avatar,
-                    Phone = us.Phone,
-                    Address = us.Address,
-                    Gender = us.Gender,
-                    Role = String.Join("",roles),
-                    UrlAvatar=uploadService.GetUrlImage(us.Avatar),
-                };
-            }).ToList();
+                    var dtoStaff = new DTOStaff
+                    {
+                        Id = user.Id,
+                        RoleId = roleIds.Id,
+                        UserName = user.UserName,
+                        Email = user.Email,
+                        Avatar = user.Avatar,
+                        Phone = user.Phone,
+                        Address = user.Address,
+                        Gender = user.Gender,
+                        Role = String.Join("", roles),
+                        UrlAvatar = uploadService.GetUrlImage("Avatar", user.Avatar),
+                    };
+                    listStaff.Add(dtoStaff);
+                }
+              
+            }
+            return listStaff;
+            
 
-            await Task.WhenAll(tasks);
-
-            var result = tasks.Select(task => task.Result).ToList();
-            return result;
+            
         }
 
         public async Task<DTOStaff> GetStaff(string Id)
@@ -122,7 +124,7 @@ namespace ManagerLibrary.Repository.StaffReponsitory
                     Address = user.Address,
                     Gender = user.Gender,
                     Role = String.Join("", roles),
-                    UrlAvatar = uploadService.GetUrlImage(user.Avatar),
+                    UrlAvatar = uploadService.GetUrlImage("Book",user.Avatar),
 
                 };
             }

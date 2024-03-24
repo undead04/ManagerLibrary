@@ -28,7 +28,7 @@ namespace ManagerLibrary.Services.StatisticalService
             {
                 Id = bo.Book!.Id,
                 Title = bo.Book!.Title,
-                UrlImage = uploadService.GetUrlImage(bo.Book!.Image),
+                UrlImage = uploadService.GetUrlImage("Book",bo.Book!.Image),
                 
 
             }).ToList();
@@ -53,7 +53,7 @@ namespace ManagerLibrary.Services.StatisticalService
             {
                 Id=bo.Book!.Id,
                 Title=bo.Book!.Title,
-                UrlImage=uploadService.GetUrlImage(bo.Book!.Image),
+                UrlImage=uploadService.GetUrlImage("Book",bo.Book!.Image),
                 BorrowCount=bo.TotalQuantitySold,
                 
             }).ToList();

@@ -4,7 +4,7 @@
     {
         Task<string> UploadImage<T>(T? id,string procode,IFormFile image);
         string GetFilePath(string ProCode);
-        string GetUrlImage(string imageName);
+        string GetUrlImage(string Procode,string imageName);
         void DeleteImage(string ProCode,string nameImage);
     }
 }

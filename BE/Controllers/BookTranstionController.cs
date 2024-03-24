@@ -2,6 +2,7 @@
 using ManagerLibrary.Model.DTO;
 using ManagerLibrary.Models;
 using ManagerLibrary.Repository.BookTransactionReponsitory;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +19,7 @@ namespace ManagerLibrary.Controllers
             this.bookTransactionRepository = bookTransactionReponsitory;
         }
         [HttpPost]
+        [Authorize(Policy = "BorrowEditCreate")]
         public async Task<IActionResult> CreateBrrowBook(BookTranstionModel model)
         {
             try
@@ -31,6 +33,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpPost("Export")]
+        [Authorize(Policy = "BorrowEditCreate")]
         public async Task<IActionResult> CreateExportBook([FromBody] int[] Id)
         {
             try
@@ -44,6 +47,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpGet]
+        [Authorize(Policy = "BorrowView")]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -57,6 +61,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpGet("{Id}")]
+        [Authorize(Policy = "BorrowView")]
         public async Task<IActionResult> GetAllDetail(int Id)
         {
             try
@@ -70,6 +75,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpGet("UnpaidBook")]
+        [Authorize(Policy = "BorrowView")]
         public async Task<IActionResult> GetAllUnaidbook()
         {
             try
@@ -83,6 +89,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpGet("UnpaidBook/{Id}")]
+        [Authorize(Policy = "BorrowView")]
         public async Task<IActionResult> GetAllUnaidbook(int Id)
         {
             try

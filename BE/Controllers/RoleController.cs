@@ -1,6 +1,7 @@
 ﻿using ManagerLibrary.Models;
 using ManagerLibrary.Models.DTO;
 using ManagerLibrary.Repository.Role;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ namespace ManagerLibrary.Controllers
             this.roleRepository=roleRepository;
         }
         [HttpPost]
+        [Authorize(Policy = "BorrowView")]
         public async Task<IActionResult> CreateRole(RoleModel model)
         {
             try
@@ -76,7 +78,7 @@ namespace ManagerLibrary.Controllers
                     return NotFound();
                 }
                
-                return Ok(Repository<RoleDTO>.WithData(role, 200));
+                return Ok(Repository<RoleDetailDTO>.WithData(role, 200));
             }
             catch
             {

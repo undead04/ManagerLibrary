@@ -2,6 +2,7 @@
 using ManagerLibrary.Models.DTO;
 using ManagerLibrary.Repository.StaffReponsitory;
 using ManagerLibrary.Validation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
@@ -21,12 +22,15 @@ namespace ManagerLibrary.Controllers
             this.validations = validations;
         }
         [HttpPost]
+        
         public async Task<IActionResult> CreateStaff([FromForm]StaffModel model)
         {
             try
             {
                 var validationStaff = new ValidationStaffModel
                 {
+                    UserName= model.UserName,
+                    Password=model.Password,
                     UserId = string.Empty,
                     Phone=model.Phone,
                     Email=model.Email,
@@ -54,6 +58,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpPut("{Id}")]
+        [Authorize(Policy = "StaffEditCreate")]
         public async Task<IActionResult> UpdateStaff(string Id, [FromForm] StaffModel model)
         {
             try
@@ -92,6 +97,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpDelete("{Id}")]
+        [Authorize(Policy = "StaffDelete")]
         public async Task<IActionResult> DeteteStaff(string Id)
         {
             try
@@ -110,6 +116,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpGet("{Id}")]
+        [Authorize(Policy = "StaffView")]
         public async Task<IActionResult> GetStaff(string Id)
         {
             try
@@ -128,6 +135,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpGet]
+        [Authorize(Policy = "StaffView")]
         public async Task<IActionResult> GetAllStaff()
         {
             try

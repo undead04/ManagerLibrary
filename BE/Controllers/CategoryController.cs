@@ -4,6 +4,7 @@ using ManagerLibrary.Models;
 using ManagerLibrary.Repository.BookReponsitory;
 using ManagerLibrary.Repository.CategoryReponsitory;
 using ManagerLibrary.Validation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +25,7 @@ namespace ManagerLibrary.Controllers
             this.bookRepository = bookReponsitory;
         }
         [HttpGet]
+        [Authorize(Policy = "CategoryView")]
         public async Task<IActionResult> GetAllCategory(string?search)
         {
             try
@@ -38,6 +40,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpGet("{Id}")]
+        [Authorize(Policy = "CategoryView")]
         public async Task<IActionResult> GetCategory(int Id)
         {
             try
@@ -56,6 +59,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpDelete("{Id}")]
+        [Authorize(Policy = "CategoryDelete")]
         public async Task<IActionResult> DeleteCateogy(int Id)
         {
             try
@@ -80,6 +84,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpPut("{Id}")]
+        [Authorize(Policy = "CategoryEditCreate")]
         public async Task<IActionResult> UpdateCategory(int Id,CategoryModel model)
         {
             try
@@ -114,6 +119,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpPost]
+        [Authorize(Policy = "CategoryEditCreate")]
         public async Task<IActionResult> CreateCategory(CategoryModel model)
         {
             try

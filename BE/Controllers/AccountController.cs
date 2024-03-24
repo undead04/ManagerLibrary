@@ -7,6 +7,7 @@ namespace ManagerLibrary.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class AccountController : ControllerBase
     {
         private readonly IAccountService accountService;

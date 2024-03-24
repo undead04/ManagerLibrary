@@ -70,7 +70,7 @@ namespace ManagerLibrary.Repository.MemberReposnitory
                 Address = me.Address,
                 Avatar = me.Avatar,
                 Gender = me.Gender,
-                UrlImage = uploadService.GetUrlImage(me.Avatar)
+                UrlImage = uploadService.GetUrlImage("Avatar",me.Avatar)
             }).ToListAsync();
         }
 
@@ -89,7 +89,7 @@ namespace ManagerLibrary.Repository.MemberReposnitory
                 Address = member.Address,
                 Gender = member.Gender,
                 Avatar = member.Avatar,
-                UrlImage=uploadService.GetUrlImage(member.Avatar)
+                UrlImage=uploadService.GetUrlImage("Avatar", member.Avatar)
             };
         }
 

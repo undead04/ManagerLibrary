@@ -36,10 +36,10 @@ namespace ManagerLibrary.Services.UpLoadService
             }
             return newImage;
         }
-        public string GetUrlImage(string imageName)
+        public string GetUrlImage(string Procode, string imageName)
         {
             string hostUrl = "https://localhost:7119/";
-            return hostUrl + "Uploads/Book/" + imageName;
+            return hostUrl + $"Uploads/{Procode}/" + imageName;
         }
         public void DeleteImage(string ProCode, string nameImage)
         {

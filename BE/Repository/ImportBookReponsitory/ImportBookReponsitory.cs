@@ -2,6 +2,7 @@
 using ManagerLibrary.Data;
 using ManagerLibrary.Model;
 using ManagerLibrary.Models.DTO;
+using ManagerLibrary.Services.ReadJWTService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -14,33 +15,34 @@ namespace ManagerLibraryAPI.Repository.ImportBookReponsitory
     {
         private readonly MyDb context;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IReadJWTService readJWTService;
         private readonly ClaimsPrincipal _user;
 
-        public ImportBookReponsitory(MyDb context,UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor) 
+        public ImportBookReponsitory(MyDb context,UserManager<ApplicationUser> userManager, IReadJWTService readJWTService) 
         {
             this.context = context;
             this.userManager = userManager;
-            _user = httpContextAccessor.HttpContext!.User;
+            this.readJWTService = readJWTService;
         }
         public async Task CreateImportBook(ImportBookMode model)
         {
-            //var email = _user.FindFirst(ClaimTypes.Email)!.Value;
-            //var user= await userManager.FindByEmailAsync(email);
+            var userId =await readJWTService.ReadJWT();
             var importBook = new ImportReceipts
             {
                 Create_At = DateTime.Now,
-                UserId = model.UserId
+                UserId = userId
 
             };
             await context.importReceipts.AddAsync(importBook);
             await context.SaveChangesAsync();
             foreach(var book in model.importBookDetails!)
             {
+                
                 var importBookDetail = new ImportReceiptsDetail
                 {
                     ImportReceiptId=importBook.Id,
                     BookId = book.BookId,
-                    Price = book.Price,
+                    Price= book.Price,
                     Quantity = book.Quantity,
                 };
                 await context.importReceiptsDetails.AddAsync(importBookDetail);

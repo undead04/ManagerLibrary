@@ -12,7 +12,7 @@ namespace ManagerLibrary.Repository.BookReponsitory
     {
         private readonly MyDb context;
         private readonly IUploadService uploadService;
-
+        
         public BookReponsitory(MyDb context,IUploadService uploadService) 
         {
             this.context = context;
@@ -80,9 +80,9 @@ namespace ManagerLibrary.Repository.BookReponsitory
                 Id = book.Id,
                 PublishedYear = book.PublishedYear,
                 Image = book.Image,
-                UrlImage = uploadService.GetUrlImage(book.Image),
+                UrlImage = uploadService.GetUrlImage("Book",book.Image),
                 NameCategory=book.Category!.Name,
-                Quatity=quantityImport,
+                Quantity=quantityImport,
                 PresentQuantity=quantityImport-quantityExport,
             };
         }
@@ -136,7 +136,8 @@ namespace ManagerLibrary.Repository.BookReponsitory
                  PublishedYear = bo.PublishedYear,
                  Image = bo.Image,
                  Price = bo.Price,
-                 UrlImage = uploadService.GetUrlImage(bo.Image),
+                 UrlImage = uploadService.GetUrlImage("Book",bo.Image),
+                 NameCategory=bo.Category!.Name
                 
              }).ToListAsync();
         }

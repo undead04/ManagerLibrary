@@ -2,6 +2,7 @@
 using ManagerLibrary.Models;
 using ManagerLibrary.Models.DTO;
 using ManagerLibraryAPI.Repository.ImportBookReponsitory;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +19,7 @@ namespace ManagerLibrary.Controllers
             this.importBookRepository=importBookReponsitory;
         }
         [HttpPost]
+        [Authorize(Policy = "ImportEditCreate")]
         public async Task<IActionResult> CreateImportBook(ImportBookMode model)
         {
             try
@@ -32,6 +34,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpGet]
+        [Authorize(Policy = "ImportView")]
         public async Task<IActionResult> GetAllImportBook()
         {
             try
@@ -46,6 +49,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpGet("{Id}")]
+        [Authorize(Policy = "ImportView")]
         public async Task<IActionResult> GetImportBookDetail(int Id)
         {
             try

@@ -1,5 +1,6 @@
 ﻿using FluentValidation.AspNetCore;
 using ManagerLibrary.Data;
+using ManagerLibrary.Models;
 using ManagerLibrary.Repository.BookReponsitory;
 using ManagerLibrary.Repository.BookTransactionReponsitory;
 using ManagerLibrary.Repository.CategoryReponsitory;
@@ -9,6 +10,9 @@ using ManagerLibrary.Repository.Role;
 using ManagerLibrary.Repository.RoleRepository;
 using ManagerLibrary.Repository.StaffReponsitory;
 using ManagerLibrary.Services.AccountService;
+using ManagerLibrary.Services.AuthencationService;
+using ManagerLibrary.Services.ClaimsService;
+using ManagerLibrary.Services.ReadJWTService;
 using ManagerLibrary.Services.StatisticalService;
 using ManagerLibrary.Services.UpLoadService;
 using ManagerLibraryAPI.Repository.ImportBookReponsitory;
@@ -16,6 +20,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
@@ -89,6 +94,42 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = true;
 });
+// phân quyền
+var policyConfigurations = new List<PolicyConfiguration>
+        {
+            new PolicyConfiguration { PolicyName = "BookView", ClaimType = "book", ClaimValue = "view" },
+            new PolicyConfiguration { PolicyName = "BookEditCreate", ClaimType = "book", ClaimValue = "editcreate" },
+            new PolicyConfiguration { PolicyName = "BookDelete", ClaimType = "book", ClaimValue = "delete" },
+            new PolicyConfiguration { PolicyName = "MemberView", ClaimType = "member", ClaimValue = "view" },
+            new PolicyConfiguration { PolicyName = "MemberEditCreate", ClaimType = "member", ClaimValue = "editcreate" },
+            new PolicyConfiguration { PolicyName = "MemberDelete", ClaimType = "member", ClaimValue = "delete" },
+            new PolicyConfiguration { PolicyName = "CategoryView", ClaimType = "category", ClaimValue = "view" },
+            new PolicyConfiguration { PolicyName = "CategoryEditCreate", ClaimType = "category", ClaimValue = "editcreate" },
+            new PolicyConfiguration { PolicyName = "CategoryDelete", ClaimType = "category", ClaimValue = "delete" },
+            new PolicyConfiguration { PolicyName = "StaffView", ClaimType = "staff", ClaimValue = "view" },
+            new PolicyConfiguration { PolicyName = "StaffEditCreate", ClaimType = "staff", ClaimValue = "editcreate" },
+            new PolicyConfiguration { PolicyName = "StaffDelete", ClaimType = "staff", ClaimValue = "delete" },
+            new PolicyConfiguration { PolicyName = "BorrowView", ClaimType = "borrow", ClaimValue = "view" },
+            new PolicyConfiguration { PolicyName = "BorrowEditCreate", ClaimType = "borrow", ClaimValue = "editcreate" },
+            new PolicyConfiguration { PolicyName = "ImportView", ClaimType = "import", ClaimValue = "view" },
+            new PolicyConfiguration { PolicyName = "ImportEditCreate", ClaimType = "import", ClaimValue = "editcreate" },
+            new PolicyConfiguration { PolicyName = "IncomeView", ClaimType = "income", ClaimValue = "view" },
+            
+
+            // Add more policy configurations as needed
+        };
+
+// Add authorization policies dynamically based on the configurations
+foreach (var policyConfig in policyConfigurations)
+{
+    builder.Services.AddAuthorization(options =>
+    {
+        options.AddPolicy(policyConfig.PolicyName, policy =>
+        {
+            policy.RequireClaim(policyConfig.ClaimType, policyConfig.ClaimValue);
+        });
+    });
+}
 builder.Services.AddScoped<ICategoryReponsitory, CategoryRepository>();
 builder.Services.AddScoped<IBookReponsitory, BookReponsitory>();
 builder.Services.AddScoped<IMemberReponsitory, MemberReponsitory>();
@@ -101,6 +142,8 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IStatisticalServer,StatisticalServer>();
+builder.Services.AddScoped<IClaimsService, ClaimsService>();
+builder.Services.AddScoped<IReadJWTService, ReadJWTService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -13,7 +13,7 @@ namespace ManagerLibrary.Model.DTO
         public int CategoryId { get; set; }
         public string NameCategory { get; set; } = string.Empty;
         public string UrlImage { get; set; } = string.Empty;
-        public int Quatity { get; set; }
+        public int Quantity { get; set; }
         public int PresentQuantity { get; set; }
     }
 }
