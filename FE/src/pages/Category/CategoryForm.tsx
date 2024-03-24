@@ -34,13 +34,24 @@ const CategoryForm = ({
 					id: edittingCategory.categoryId,
 					data: { description, name },
 				}),
-			);
+			)
+				.unwrap()
+				.then(() => {
+					dispatch(getCategorys({}));
+					handleClose();
+				})
+				.catch((err) => {
+					console.log(err);
+				});
 		} else {
-			dispatch(addCategory({ name, description })).then(() => {
-				dispatch(getCategorys());
-			});
+			dispatch(addCategory({ name, description }))
+				.then(() => {
+					dispatch(getCategorys({}));
+				})
+				.then(() => {
+					handleClose();
+				});
 		}
-		handleClose();
 		form.resetFields();
 	};
 
@@ -88,6 +99,12 @@ const CategoryForm = ({
 							</Form.Item>
 
 							<Form.Item
+								rules={[
+									{
+										required: true,
+										message: "This field is required",
+									},
+								]}
 								initialValue={edittingCategory?.description}
 								name={"description"}
 								label="Description:"

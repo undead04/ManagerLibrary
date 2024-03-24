@@ -116,16 +116,8 @@ const router = createBrowserRouter([
 				element: <CouponAdd />,
 			},
 			{
-				path: "/category/add",
-				element: <CategoryForm />,
-			},
-			{
 				path: "/category",
 				element: <Category />,
-			},
-			{
-				path: "/category/edit/:id",
-				element: <CategoryForm />,
 			},
 			{
 				path: "/income",

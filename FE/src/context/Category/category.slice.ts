@@ -5,6 +5,7 @@ import {
 } from "@reduxjs/toolkit";
 import { ICategory } from "../../type";
 import categoryService from "../../services/categoryService";
+import { Bounce, toast } from "react-toastify";
 
 interface IState {
 	categorys: ICategory[];
@@ -18,20 +19,20 @@ const initialState: IState = {
 	isLoading: false,
 };
 
-export const getCategorys = createAsyncThunk<ICategory[]>(
-	"categorys/get",
-	async () => {
-		try {
-			const data = await categoryService
-				.list()
-				.then((res) => res.data);
-			return data ?? []; // Trả về một mảng rỗng nếu data là undefined
-		} catch (error) {
-			console.log(error);
-			throw error; // Ném ra lỗi để createAsyncThunk xử lý
-		}
-	},
-);
+export const getCategorys = createAsyncThunk<
+	ICategory[],
+	{ q?: string }
+>("categorys/get", async ({ q }: { q?: string }) => {
+	try {
+		const data = await categoryService
+			.list(q)
+			.then((res) => res.data);
+		return data ?? []; // Trả về một mảng rỗng nếu data là undefined
+	} catch (error) {
+		console.log(error);
+		throw error; // Ném ra lỗi để createAsyncThunk xử lý
+	}
+});
 
 export const getCategory = createAsyncThunk(
 	"category/get",
@@ -51,9 +52,10 @@ export const addCategory = createAsyncThunk(
 	async (data: Omit<ICategory, "categoryId">) => {
 		try {
 			categoryService.create({ data });
-			return data;
 		} catch (error) {
 			console.log(error);
+
+			return error;
 		}
 	},
 );
@@ -68,13 +70,28 @@ export const updateCategory = createAsyncThunk(
 		id: string;
 	}) => {
 		try {
-			categoryService.edit({ id, data });
+			await categoryService.edit({ id, data }).catch((err) => {
+				toast.error(err.response.data.message.Name, {
+					position: "top-center",
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+					theme: "light",
+					transition: Bounce,
+				});
+				throw err;
+			});
+
 			return {
 				...data,
 				categoryId: id,
 			} as ICategory;
 		} catch (error) {
 			console.log(error);
+			throw error;
 		}
 	},
 );
@@ -118,6 +135,9 @@ export const categorySlice = createSlice({
 				state.categorys = action.payload;
 				state.isLoading = false;
 			})
+			.addCase(getCategorys.rejected, (state) => {
+				state.isLoading = false;
+			})
 			.addCase(updateCategory.fulfilled, (state, action) => {
 				state.edittingCategory = null;
 				state.categorys.find((c, index) => {
@@ -130,7 +150,9 @@ export const categorySlice = createSlice({
 			})
 			.addCase(addCategory.fulfilled, (state) => {
 				state.edittingCategory = null;
+				state.isLoading = false;
 			})
+
 			.addCase(removeCategory.fulfilled, (state, action) => {
 				if (action.payload) {
 					const filterData = state.categorys.filter(

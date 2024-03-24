@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Button, Input, Modal, Table } from "antd";
+import { Alert, Button, Input, Modal, Spin, Table } from "antd";
 import type { TableColumnsType } from "antd";
-import { useNavigate } from "react-router-dom";
 import {
 	DeleteOutlined,
 	EditOutlined,
@@ -27,14 +26,14 @@ interface ExtendedCategory extends ICategory {
 }
 
 const Category = () => {
-	const navigate = useNavigate();
 	const [form] = useForm();
 	const dispatch = useAppDispatch();
-	const [loading, setLoading] = useState(false);
 	const categorys = useSelector(
 		(state: RootState) => state.category.categorys,
 	);
-
+	const isLoading = useSelector(
+		(state: RootState) => state.category.isLoading,
+	);
 	const filterData: ExtendedCategory[] = categorys.map(
 		(c, index) => ({
 			...c,
@@ -42,9 +41,7 @@ const Category = () => {
 			index: index + 1,
 		}),
 	);
-	const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>(
-		[],
-	);
+
 	// Modal
 	const [open, setOpen] = useState(false);
 	const showModal = () => {
@@ -55,13 +52,8 @@ const Category = () => {
 		dispatch(cancelEdittingCategory());
 		setOpen(false);
 	};
-	const start = () => {
-		setLoading(true);
-		// ajax request after empty completing
-		setTimeout(() => {
-			setSelectedRowKeys([]);
-			setLoading(false);
-		}, 1000);
+	const reload = () => {
+		dispatch(getCategorys({}));
 	};
 
 	const handleStartEdit = (item: ExtendedCategory) => {
@@ -106,50 +98,35 @@ const Category = () => {
 		},
 		{
 			title: "",
-			dataIndex: "key",
+			dataIndex: "categoryId",
 			render: (id: string, item) => {
 				return (
-					<Button
-						onClick={() => handleStartEdit(item)}
-						className="text-blue-500 underline"
-					>
-						<EditOutlined />
-					</Button>
-				);
-			},
-		},
-		{
-			title: "",
-			dataIndex: "categoryId",
-			render: (id: string) => {
-				return (
-					<Button
-						className="text-red-500 underline"
-						onClick={() => handleStartDelete(id)}
-					>
-						<DeleteOutlined />
-					</Button>
+					<div className="flex gap-2 items-center">
+						<Button
+							onClick={() => handleStartEdit(item)}
+							className="text-blue-500 underline p-0 aspect-square flex items-center justify-center"
+						>
+							<EditOutlined />
+						</Button>
+						<Button
+							className="text-red-500 underline p-0 aspect-square flex items-center justify-center"
+							onClick={() => handleStartDelete(id)}
+						>
+							<DeleteOutlined />
+						</Button>
+					</div>
 				);
 			},
 		},
 	];
 
-	const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-		console.log("selectedRowKeys changed: ", newSelectedRowKeys);
-		setSelectedRowKeys(newSelectedRowKeys);
-	};
-
-	const rowSelection = {
-		selectedRowKeys,
-		onChange: onSelectChange,
-	};
-	const hasSelected = selectedRowKeys.length > 0;
-
-	const onSearch: SearchProps["onSearch"] = (value, _e, info) =>
+	const onSearch: SearchProps["onSearch"] = (value, _e, info) => {
+		dispatch(getCategorys({ q: value }));
 		console.log(info?.source, value);
+	};
 
 	useEffect(() => {
-		dispatch(getCategorys());
+		dispatch(getCategorys({ q: "" }));
 	}, []);
 	return (
 		<>
@@ -175,31 +152,25 @@ const Category = () => {
 				>
 					<CategoryForm form={form} handleClose={hideModal} />
 				</Modal>
-
-				<div className="text-3xl font-semibold my-2">
+				<h4 className="text-3xl bg-blue-600 py-4 text-white font-semibold mb-4 text-center rounded-sm">
 					Categories - List
-				</div>
-
+				</h4>
 				<div style={{ marginBottom: 16 }}>
 					<div className="mb-4 flex items-center justify-between">
 						<div>
 							<Button
+								size="large"
 								type="primary"
-								onClick={start}
-								disabled={!hasSelected}
-								loading={loading}
+								onClick={reload}
+								loading={isLoading}
 							>
 								Reload
 							</Button>
-							<span style={{ marginLeft: 8 }}>
-								{hasSelected
-									? `Selected ${selectedRowKeys.length} items`
-									: ""}
-							</span>
 						</div>
 
 						<div>
 							<Button
+								size="large"
 								type="primary"
 								icon={<PlusCircleOutlined />}
 								onClick={showModal}
@@ -208,37 +179,39 @@ const Category = () => {
 							</Button>
 						</div>
 					</div>
-					<span style={{ marginLeft: 8 }}>
-						{hasSelected
-							? `Selected ${selectedRowKeys.length} items`
-							: ""}
-					</span>
 				</div>
 
 				<div className="mb-4">
 					<Search
-						placeholder="input search text"
+						size="large"
+						placeholder="Search for categories"
 						onSearch={onSearch}
 						enterButton
 					/>
 				</div>
-				<Table
-					pagination={{
-						position: ["bottomRight"],
-						showSizeChanger: true,
-					}}
-					onRow={(book) => {
-						return {
-							onDoubleClick: (event) => {
-								event.preventDefault();
-								navigate(`/book/d/${book.key}`);
-							},
-						};
-					}}
-					rowSelection={rowSelection}
-					columns={columns}
-					dataSource={filterData}
-				/>
+				{!isLoading && (
+					<Table
+						pagination={{
+							position: ["bottomRight"],
+							showSizeChanger: true,
+							pageSizeOptions: [4, 8, 16, 32, 64, 128, 256],
+						}}
+						columns={columns}
+						dataSource={filterData}
+					/>
+				)}
+
+				{isLoading && (
+					<div className="w-[50%] my-8 mx-auto">
+						<Spin tip={"Loading"} spinning={true}>
+							<Alert
+								type="info"
+								message="Loading data"
+								description="Data is loading. Please wait..."
+							/>
+						</Spin>
+					</div>
+				)}
 			</div>
 		</>
 	);

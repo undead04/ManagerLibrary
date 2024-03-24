@@ -1,101 +1,67 @@
-import React, { useState } from "react";
-import { Button, Input, Modal, Space, Table } from "antd";
+import React, { useEffect, useState } from "react";
+import {
+	Alert,
+	Button,
+	Image,
+	Input,
+	Modal,
+	Spin,
+	Table,
+} from "antd";
 import type { TableColumnsType } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
 	DeleteOutlined,
 	EditOutlined,
+	EyeOutlined,
 	PlusCircleOutlined,
 } from "@ant-design/icons";
 
 import type { SearchProps } from "antd/es/input/Search";
 import BookForm from "./BookForm";
+import { RootState, useAppDispatch } from "../../context/store";
+import {
+	cancelEdittingBook,
+	getBook,
+	getBooks,
+	removeBook,
+	startEdittingBook,
+} from "../../context/Book/book.slice";
+import { useSelector } from "react-redux";
+import { IBook } from "../../type/book.type";
+import { formatCurrency } from "../../utils/formatCurrency";
+import { useForm } from "antd/es/form/Form";
 
 const { Search } = Input;
 
-interface DataType {
+interface IBookExtend extends IBook {
 	key: React.Key;
-	title: string;
-	author: string;
-	publishYear: string;
-	price: string;
-}
-
-const columns: TableColumnsType<DataType> = [
-	{
-		title: "Title",
-		dataIndex: "title",
-	},
-	{
-		title: "Author",
-		dataIndex: "author",
-	},
-
-	{
-		title: "Publish year",
-		dataIndex: "publishYear",
-	},
-	{
-		title: "",
-		dataIndex: "key",
-		render: (id: string) => {
-			return (
-				<Link
-					className="text-blue-500 underline"
-					to={`/book/d/${id} `}
-				>
-					Details
-				</Link>
-			);
-		},
-	},
-	{
-		title: "",
-		dataIndex: "key",
-		render: (id: string) => {
-			return (
-				<Link
-					className="text-blue-500 underline"
-					to={`/book/edit/${id} `}
-				>
-					<EditOutlined />
-				</Link>
-			);
-		},
-	},
-	{
-		title: "",
-		dataIndex: "key",
-		render: (id: string) => {
-			return (
-				<Link
-					className="text-red-500 underline"
-					to={`/book/delete/${id} `}
-				>
-					<DeleteOutlined />
-				</Link>
-			);
-		},
-	},
-];
-
-const data: DataType[] = [];
-for (let i = 0; i < 46; i++) {
-	data.push({
-		key: i,
-		title: `Edward King ${i}`,
-		author: `Author ${i}`,
-		publishYear: `200${i}`,
-		price: ` ${i}`,
-	});
+	index: number;
 }
 
 const Book = () => {
-	const navigate = useNavigate();
-	const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>(
-		[],
+	const dispatch = useAppDispatch();
+	const books = useSelector(
+		(state: RootState) => state.book.booksDetail,
 	);
-	const [loading, setLoading] = useState(false);
+
+	const edittingBook = useSelector(
+		(state: RootState) => state.book.edittingBook,
+	);
+	const isLoading = useSelector(
+		(state: RootState) => state.book.isLoading,
+	);
+
+	const filteredData: IBookExtend[] = books.map((b, index) => {
+		return {
+			...b,
+			key: b.id,
+			index: index + 1,
+		};
+	});
+
+	// Form
+	const [form] = useForm();
 	// Modal
 	const [open, setOpen] = useState(false);
 	const showModal = () => {
@@ -104,62 +70,194 @@ const Book = () => {
 
 	const hideModal = () => {
 		setOpen(false);
+		dispatch(cancelEdittingBook());
 	};
-	const start = () => {
-		setLoading(true);
-		// ajax request after empty completing
-		setTimeout(() => {
-			setSelectedRowKeys([]);
-			setLoading(false);
-		}, 1000);
+	const reload = () => {
+		dispatch(getBooks({}));
 	};
 
-	const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-		console.log("selectedRowKeys changed: ", newSelectedRowKeys);
-		setSelectedRowKeys(newSelectedRowKeys);
+	useEffect(() => {
+		dispatch(getBooks({}));
+	}, [dispatch]);
+
+	const handleStartEdit = (id: string) => {
+		dispatch(getBook(id))
+			.unwrap()
+			.then((res) => {
+				if (res) {
+					dispatch(startEdittingBook(res));
+				}
+			});
+		setOpen(true);
 	};
 
-	const rowSelection = {
-		selectedRowKeys,
-		onChange: onSelectChange,
+	const [deleteId, setDeleteId] = useState<string>();
+	const [openDelete, setOpenDelete] = useState(false);
+	const handleDelete = (id: string) => {
+		dispatch(removeBook({ id }))
+			.unwrap()
+			.then((res) => {
+				console.log(res);
+			});
+		setOpenDelete(false);
 	};
-	const hasSelected = selectedRowKeys.length > 0;
-	const onSearch: SearchProps["onSearch"] = (value, _e, info) =>
+
+	const handleStartDelete = (id: string) => {
+		setDeleteId(id);
+		setOpenDelete(true);
+	};
+
+	const handleCancelDelete = () => {
+		setOpenDelete(false);
+		setDeleteId("");
+	};
+
+	const columns: TableColumnsType<IBookExtend> = [
+		{
+			title: "STT",
+			dataIndex: "index",
+			align: "center",
+		},
+		{
+			title: "Image",
+			dataIndex: "urlImage",
+			align: "center",
+			render: (url: string) => {
+				return (
+					<div className="mx-auto w-fit">
+						<div className="w-12 aspect-video">
+							<Image src={url} alt="url" />
+						</div>
+					</div>
+				);
+			},
+		},
+		{
+			title: "ISBN Id",
+			dataIndex: "isbn",
+		},
+		{
+			title: "Title",
+			dataIndex: "title",
+			sorter: (a, b) => a.title.localeCompare(b.title),
+			render: (title: string) => {
+				return (
+					<div className="max-w-[300px] line-clamp-2">{title}</div>
+				);
+			},
+		},
+		{
+			title: "Author",
+			dataIndex: "author",
+			sorter: (a, b) => a.author.localeCompare(b.author),
+			render: (title: string) => {
+				return (
+					<div className="max-w-[300px] text-wrap line-clamp-2">
+						{title}
+					</div>
+				);
+			},
+		},
+		{
+			title: "Category",
+			dataIndex: "nameCategory",
+		},
+		{
+			title: "Price",
+			dataIndex: "price",
+			render: (price: number) => {
+				return <div>{formatCurrency(price)}</div>;
+			},
+			sorter: (a, b) => a.price - b.price,
+		},
+
+		{
+			title: "",
+			dataIndex: "id",
+			align: "end",
+			render: (id: string) => {
+				return (
+					<div className="flex gap-2 items-center justify-center">
+						<Button className="p-0 aspect-square flex items-center justify-center">
+							<Link
+								className="text-blue-500 underline"
+								to={`/book/d/${id} `}
+							>
+								<EyeOutlined />
+							</Link>
+						</Button>
+						<Button
+							onClick={() => handleStartEdit(id)}
+							className="text-blue-500 underline p-0 aspect-square flex items-center justify-center"
+						>
+							<EditOutlined />
+						</Button>
+						<Button
+							className="text-red-500 underline p-0 aspect-square flex items-center justify-center"
+							onClick={() => handleStartDelete(id)}
+						>
+							<DeleteOutlined />
+						</Button>
+					</div>
+				);
+			},
+		},
+	];
+
+	const onSearch: SearchProps["onSearch"] = (value, _e, info) => {
+		dispatch(getBooks({ q: value }));
 		console.log(info?.source, value);
+	};
 
 	return (
 		<div>
 			<Modal
+				title="Delete a category"
+				open={openDelete}
+				onOk={() => {
+					if (deleteId) {
+						handleDelete(deleteId);
+					}
+				}}
+				onCancel={handleCancelDelete}
+			>
+				<p>This action will not allow redo. Confirm deletion?</p>
+			</Modal>
+			<Modal
+				title={
+					<div className="text-3xl font-semibold my-2 bg-blue-500 mx-8 py-2 text-white text-center">
+						{edittingBook?.id ? "Edit book " : "Add a new book"}
+					</div>
+				}
 				width={800}
 				open={open}
 				onOk={hideModal}
 				onCancel={hideModal}
 				footer={null}
 			>
-				<BookForm />
+				<BookForm form={form} handleClose={hideModal} />
 			</Modal>
 
-			<div className="text-3xl font-semibold my-2">Books - List</div>
+			<h4 className="text-3xl bg-blue-600 py-4 text-white font-semibold mb-4 text-center rounded-sm">
+				Books - List
+			</h4>
 
 			<div className="mb-4 flex items-center justify-between">
 				<div>
 					<Button
+						size="large"
 						type="primary"
-						onClick={start}
-						disabled={!hasSelected}
-						loading={loading}
+						disabled={isLoading}
+						loading={isLoading}
+						onClick={reload}
 					>
 						Reload
 					</Button>
-					<span style={{ marginLeft: 8 }}>
-						{hasSelected
-							? `Selected ${selectedRowKeys.length} items`
-							: ""}
-					</span>
 				</div>
 
 				<div>
 					<Button
+						size="large"
 						type="primary"
 						icon={<PlusCircleOutlined />}
 						onClick={showModal}
@@ -170,24 +268,36 @@ const Book = () => {
 			</div>
 			<div className="mb-4">
 				<Search
-					placeholder="input search text"
+					size="large"
+					placeholder="Search for books"
 					onSearch={onSearch}
 					enterButton
 				/>
 			</div>
-			<Table
-				onRow={(book) => {
-					return {
-						onDoubleClick: (event) => {
-							event.preventDefault();
-							navigate(`/book/d/${book.key}`);
-						},
-					};
-				}}
-				rowSelection={rowSelection}
-				columns={columns}
-				dataSource={data}
-			/>
+			{!isLoading && (
+				<Table
+					size="large"
+					pagination={{
+						position: ["bottomRight"],
+						showSizeChanger: true,
+						pageSizeOptions: [4, 8, 16, 32, 64, 128, 256],
+					}}
+					columns={columns}
+					dataSource={filteredData}
+				/>
+			)}
+
+			{isLoading && (
+				<div className="w-[50%] my-8 mx-auto">
+					<Spin tip={"Loading"} spinning={true}>
+						<Alert
+							type="info"
+							message="Loading data"
+							description="Data is loading. Please wait..."
+						/>
+					</Spin>
+				</div>
+			)}
 		</div>
 	);
 };

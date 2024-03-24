@@ -2,10 +2,18 @@ import { ICategory } from "../type";
 import ResponseWrapper from "./ResponseWrapper";
 import api from "./api";
 
-const list = () => {
-	return api
-		.get<ResponseWrapper<ICategory[]>>(api.url.category)
-		.then((res) => res.data);
+const list = (q?: string) => {
+	if (q) {
+		return api
+			.get<ResponseWrapper<ICategory[]>>(
+				`${api.url.category}?search=${q}`,
+			)
+			.then((res) => res.data);
+	} else {
+		return api
+			.get<ResponseWrapper<ICategory[]>>(api.url.category)
+			.then((res) => res.data);
+	}
 };
 
 const create = ({
@@ -15,7 +23,12 @@ const create = ({
 }) => {
 	return api
 		.post<ResponseWrapper<null>>(api.url.category, data)
-		.then((res) => res.data);
+		.then((res) => res.data)
+		.catch((err) => {
+			console.log(err.response.data.message.Name);
+
+			alert(err.response.data.message.Name);
+		});
 };
 
 const read = ({ id }: { id: string }) => {
@@ -31,10 +44,12 @@ const edit = ({
 	id: string;
 	data: Omit<ICategory, "categoryId">;
 }) => {
-	return api.put<ResponseWrapper<null>>(
-		`${api.url.category}/${id}`,
-		data,
-	);
+	return api
+		.put<ResponseWrapper<null>>(`${api.url.category}/${id}`, data)
+		.then((res) => res.data)
+		.catch((err) => {
+			throw err;
+		});
 };
 
 const remove = ({ id }: { id: string }) => {

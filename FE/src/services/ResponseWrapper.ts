@@ -1,6 +1,6 @@
 type ResponseWrapper<T> = {
 	statusCode: number;
-	message: string | null;
+	message: T;
 	data: T;
 };
 
