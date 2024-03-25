@@ -43,6 +43,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpGet("{Id}")]
+        [Authorize(Policy = "MemberView")]
         public async Task<IActionResult> GetMember(int Id)
         {
             try
@@ -60,6 +61,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpPost]
+        [Authorize(Policy = "MemberEditCreate")]
         public async Task<IActionResult> CreateMember([FromForm]MemberModel model)
         {
             try
@@ -93,6 +95,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpPut("{Id}")]
+        [Authorize(Policy = "MemberEditCreate")]
         public async Task<IActionResult> UpdateMember(int Id,[FromForm]MemberModel model)
         {
             try
@@ -131,6 +134,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpDelete("{Id}")]
+        [Authorize(Policy = "MemberEditDelete")]
         public async Task<IActionResult> DeleteMember(int Id)
         {
             try

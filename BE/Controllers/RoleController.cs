@@ -18,7 +18,7 @@ namespace ManagerLibrary.Controllers
             this.roleRepository=roleRepository;
         }
         [HttpPost]
-        [Authorize(Policy = "BorrowView")]
+        
         public async Task<IActionResult> CreateRole(RoleModel model)
         {
             try

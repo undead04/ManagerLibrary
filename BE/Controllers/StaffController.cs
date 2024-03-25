@@ -58,7 +58,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpPut("{Id}")]
-        [Authorize(Policy = "StaffEditCreate")]
+        
         public async Task<IActionResult> UpdateStaff(string Id, [FromForm] StaffModel model)
         {
             try
@@ -97,7 +97,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpDelete("{Id}")]
-        [Authorize(Policy = "StaffDelete")]
+        
         public async Task<IActionResult> DeteteStaff(string Id)
         {
             try
@@ -116,7 +116,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpGet("{Id}")]
-        [Authorize(Policy = "StaffView")]
+       
         public async Task<IActionResult> GetStaff(string Id)
         {
             try
@@ -135,7 +135,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpGet]
-        [Authorize(Policy = "StaffView")]
+        
         public async Task<IActionResult> GetAllStaff()
         {
             try
