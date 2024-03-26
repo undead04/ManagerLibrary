@@ -35,11 +35,11 @@ namespace ManagerLibrary.Controllers
         }
         [HttpGet]
         [Authorize(Policy = "ImportView")]
-        public async Task<IActionResult> GetAllImportBook()
+        public async Task<IActionResult> GetAllImportBook(string? staffId)
         {
             try
             {
-                var importBook= await importBookRepository.GetAllImportBook();
+                var importBook= await importBookRepository.GetAllImportBook(staffId);
                 return Ok(Repository<List<DTOImportBook>>.WithData(importBook, 200));
 
             }

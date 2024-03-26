@@ -58,8 +58,15 @@ builder.Services.AddSwaggerGen(option =>
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(option =>
 {
     option.User.RequireUniqueEmail = true;
-})
-    .AddEntityFrameworkStores<MyDb>();
+    option.Password.RequiredLength = 8;
+    option.Password.RequireLowercase = false;
+    option.Password.RequireUppercase = false;
+    option.Password.RequireNonAlphanumeric = false;
+    option.Password.RequireDigit = false;
+    
+}).AddEntityFrameworkStores<MyDb>();
+
+
 builder.Services.AddDbContext<MyDb>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("MyDB")));
 //authencation
 builder.Services.AddAuthentication(option =>

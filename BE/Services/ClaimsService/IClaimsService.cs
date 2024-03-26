@@ -5,6 +5,6 @@ namespace ManagerLibrary.Services.ClaimsService
     public interface IClaimsService
     {
         Task CreateClaims(IdentityRole role,string claimsType, string claimsValue);
-        Task DeleteClaims(IdentityRole role);
+        Task<IdentityRole> DeleteClaims(IdentityRole role);
     }
 }

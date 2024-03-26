@@ -134,7 +134,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpDelete("{Id}")]
-        [Authorize(Policy = "MemberEditDelete")]
+        [Authorize(Policy = "MemberDelete")]
         public async Task<IActionResult> DeleteMember(int Id)
         {
             try

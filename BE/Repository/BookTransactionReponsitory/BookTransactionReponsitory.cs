@@ -2,6 +2,8 @@
 using ManagerLibrary.Data;
 using ManagerLibrary.Model;
 using ManagerLibrary.Model.DTO;
+using ManagerLibrary.Models;
+using ManagerLibrary.Services.ReadJWTService;
 using Microsoft.EntityFrameworkCore;
 using System.Formats.Asn1;
 
@@ -10,51 +12,72 @@ namespace ManagerLibrary.Repository.BookTransactionReponsitory
     public class BookTransactionReponsitory : IBookTransactionReponsitory
     {
         private readonly MyDb context;
+        private readonly IReadJWTService readJWTService;
 
-        public BookTransactionReponsitory(MyDb context) 
+        public BookTransactionReponsitory(MyDb context,IReadJWTService readJWTService) 
         {
             this.context = context;
+            this.readJWTService=readJWTService;
         }
         public async Task CreateBookTranstion(BookTranstionModel model)
         {
+            var staffid =await readJWTService.ReadJWT();
             var bookTranstion = new BookTransactions
             {
                 Create_At = DateTime.Now,
-                MembersId=model.MemebrId,
-                UserId=model.StaffId,
-                BallotType=model.BallotType
+                MembersId=model.MemberId,
+                UserId=staffid,
+                BallotType="X"
             };
             await context.bookTransactions.AddAsync(bookTranstion);
             await context.SaveChangesAsync();
-            foreach(var borrowBook in model.TranstionBookDetail)
+            foreach(var borrowBook in model.TransitionBookDetail!)
             {
                 var book = await context.books.FirstOrDefaultAsync(bo => bo.Id == borrowBook.BookId);
-                  var booktranstionDetail = new BookTransactionDetail
+                 if(book!=null)
                 {
-                    BookTransactionId= bookTranstion.Id,
-                    BookId = borrowBook.BookId,
-                    Quantity= borrowBook.Quantity,
-                    BorrowDate=DateTime.Now.Date,
-                    DeadLineDate= borrowBook.DeadLineDate.Date,
-                    Price=book.Price+50,
-                };
-                await context.bookTransactionsDetail.AddAsync(booktranstionDetail);
-                await context.SaveChangesAsync();
+                    var booktranstionDetail = new BookTransactionDetail
+                    {
+                        BookTransactionId = bookTranstion.Id,
+                        BookId = borrowBook.BookId,
+                        Quantity = borrowBook.Quantity,
+                        BorrowDate = DateTime.Now.Date,
+                        DeadLineDate = borrowBook.DeadLineDate.Date,
+                        Price = book.Price+50,
+                    };
+                    await context.bookTransactionsDetail.AddAsync(booktranstionDetail);
+                    await context.SaveChangesAsync();
+                }
+               
             }
         }
 
-        public async Task<List<DTOBookTranstion>> GetAllBookTranstion()
+        public async Task<List<DTOBookTranstion>> GetAllBookTranstion(string? BallotType, string?staffId,int? memberId)
         {
-            return await context.bookTransactions.Include(f=>f.bookTransactionDetails).Include(f=>f.User).Include(f=>f.members).Select(x => new DTOBookTranstion
+            var bookTransaction = context.bookTransactions.Include(f => f.bookTransactionDetails).Include(f => f.User).Include(f => f.members).AsQueryable();
+            if(!string.IsNullOrEmpty(staffId))
             {
-                StaffId=x.UserId,
-                MemebrId=x.MembersId,
-                Id=x.Id,
-                BallotType=x.BallotType,
-                NameStaff=x.User.UserName,
-                NameMember=x.members.Name
+                bookTransaction = bookTransaction.Where(bo => bo.UserId == staffId);
+            }
+            if(memberId.HasValue)
+            {
+                bookTransaction = bookTransaction.Where(bo => bo.MembersId == memberId);
+            }
+            if(!string.IsNullOrEmpty(BallotType))
+            {
+                bookTransaction=bookTransaction.Where(bo=>bo.BallotType== BallotType);
+            }
+            return await bookTransaction.Select(x => new DTOBookTranstion
+             {
+                 StaffId = x.UserId,
+                 MemebrId = x.MembersId,
+                 Id = x.Id,
+                 BallotType = x.BallotType,
+                 NameStaff = x.User!.UserName!,
+                 NameMember = x.members!.Name,
+                
 
-            }).ToListAsync();
+             }).ToListAsync();
 
         }
 
@@ -72,7 +95,9 @@ namespace ManagerLibrary.Repository.BookTransactionReponsitory
                 BorrowDate=x.BorrowDate,
                 DeadLineDate=x.DeadLineDate,
                 NameBook=x.Book!.Title,
-                Status = x.ReturnDate.Date == DateTime.MinValue.Date && DateTime.Now.Date > x.DeadLineDate.Date || x.ReturnDate.Date > x.DeadLineDate.Date ? "Đã quá hạn" : string.Empty
+                ReturnDate=x.ReturnDate,
+                Price=x.Price,
+                Status = x.ReturnDate.Date == DateTime.MinValue.Date && DateTime.Now.Date > x.DeadLineDate.Date || x.ReturnDate.Date > x.DeadLineDate.Date ? "Đã quá hạn" :x.ReturnDate.Date<x.DeadLineDate?"Trả đúng hạn": string.Empty
             }).ToList();
         }
 
@@ -90,7 +115,7 @@ namespace ManagerLibrary.Repository.BookTransactionReponsitory
             {
                 StaffId = x.UserId,
                 MemebrId = x.MembersId,
-                NameStaff = x.User!.UserName,
+                NameStaff = x.User!.UserName!,
                 NameMember = x.members!.Name,
                 Id = x.Id,
                 BallotType = x.BallotType,
@@ -98,28 +123,12 @@ namespace ManagerLibrary.Repository.BookTransactionReponsitory
             }).ToList();
         }
 
-        public async Task<List<DTOBookTranstionDetail>> UnpaidBookDetail(int Id)
-        {
-            var bookTranstionDetail = await context.bookTransactionsDetail
-                .Include(f => f.Book)
-                .Where(bo => bo.BookTransactionId == Id)
-                .Where(bo => bo.ReturnDate.Date==DateTime.MinValue)
-                .ToListAsync();
-            return bookTranstionDetail.Select(x => new DTOBookTranstionDetail
-            {
-                Id = x.Id,
-                BookId = x.Id,
-                BorrowDate = x.BorrowDate,
-                DeadLineDate = x.DeadLineDate,
-                NameBook = x.Book!.Title,
-                Status =x.ReturnDate.Date==DateTime.MinValue.Date && DateTime.Now.Date > x.DeadLineDate.Date||x.ReturnDate.Date>x.DeadLineDate.Date? "Đã quá hạn" : string.Empty
-            }).ToList();
-        }
-        public async Task CreateReturnBook(int[] Ids)
+       
+        public async Task CreateReturnBook(ReturnBookModel model)
         {
             
             var bookExport = await context.bookTransactions
-                 .Where(bo => bo.Id == Ids.First()).FirstOrDefaultAsync();
+                 .Where(bo => bo.Id == model.BookTranstionId).FirstOrDefaultAsync();
             if(bookExport != null)
             {
                 var bookTranstion = new BookTransactions
@@ -127,25 +136,35 @@ namespace ManagerLibrary.Repository.BookTransactionReponsitory
                     Create_At = DateTime.Now,
                     MembersId = bookExport.MembersId,
                     UserId = bookExport.UserId,
-                    BallotType = "N"
+                    BallotType = "N",
+                    
+                    
                 };
                 await context.bookTransactions.AddAsync(bookTranstion);
                 await context.SaveChangesAsync();
-                foreach (var id in Ids)
+                foreach (var id in model.bookDetail)
                 {
                     var detail=await context.bookTransactionsDetail.Include(f=>f.Book)
                         .Where(bo=>bo.Id==id).FirstOrDefaultAsync();
-                    detail.ReturnDate = DateTime.Now.Date;
-                    var booktranstionDetail = new BookTransactionDetail
+                    
+                    if(detail!=null)
                     {
-                        BookTransactionId = bookTranstion.Id,
-                        BookId = detail!.BookId,
-                        Quantity = detail.Quantity,
-                        ReturnDate=DateTime.Now.Date,
-                        
-                    };
-                    await context.bookTransactionsDetail.AddAsync(booktranstionDetail);
-                    await context.SaveChangesAsync();
+                        detail.ReturnDate = DateTime.Now.Date;
+                        var booktranstionDetail = new BookTransactionDetail
+                        {
+                            BookTransactionId = bookTranstion.Id,
+                            BookId = detail!.BookId,
+                            Quantity = detail.Quantity,
+                            ReturnDate = DateTime.Now.Date,
+                            Price = DateTime.Now.Date>detail.DeadLineDate?detail.Price-10:detail.Price-5,
+                            DeadLineDate=detail.DeadLineDate,
+                            BorrowDate=detail.DeadLineDate,
+
+
+                        };
+                        await context.bookTransactionsDetail.AddAsync(booktranstionDetail);
+                        await context.SaveChangesAsync();
+                    }
                 }
             }
             

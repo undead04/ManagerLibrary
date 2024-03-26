@@ -24,10 +24,10 @@ namespace ManagerLibrary.Validation
 
                     if (!IsPhoneUnchanged(model) && !IsPhoneUneque(phone))
                     {
-                        context.AddFailure("Số điện thoại không được trùng bị trùng");
+                        context.AddFailure("Số điện thoại không được trùng");
                     }
                 });
-            RuleFor(x => x.Gender).NotEmpty().WithMessage("Không được để trống");
+            RuleFor(x => x.Gender).NotNull().WithMessage("Không được để trống");
         }
         private bool IsPhoneUnchanged(ValidationMemberModel memberModel)
         {

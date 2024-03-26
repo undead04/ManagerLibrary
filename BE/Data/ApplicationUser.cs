@@ -10,5 +10,6 @@ namespace ManagerLibrary.Data
         public string Address { get; set; } = string.Empty;
         public ICollection<BookTransactions>? bookTransactions { get; set; }
         public ICollection<ImportReceipts>? importReceipts { get; set; }
+       
     }
 }

@@ -11,5 +11,6 @@ namespace ManagerLibrary.Model.DTO
         public int MemebrId { get; set; }
         public string BallotType { get; set; } = string.Empty;
        
+       
     }
 }

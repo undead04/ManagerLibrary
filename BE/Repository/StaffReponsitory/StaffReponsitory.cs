@@ -2,6 +2,7 @@
 using ManagerLibrary.Models;
 using ManagerLibrary.Models.DTO;
 using ManagerLibrary.Repository.PasswordRepository;
+using ManagerLibrary.Services.ReadJWTService;
 using ManagerLibrary.Services.UpLoadService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -16,15 +17,17 @@ namespace ManagerLibrary.Repository.StaffReponsitory
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly IPasswordRepository passwordRepository;
         private readonly IUploadService uploadService;
+        private readonly IReadJWTService readJWTService;
 
         public StaffReponsitory(MyDb context,UserManager<ApplicationUser> userManager,RoleManager<IdentityRole> roleManager,
-            IPasswordRepository passwordRepository,IUploadService uploadService)
+            IPasswordRepository passwordRepository,IUploadService uploadService,IReadJWTService readJWTService)
         {
             this.context = context;
             this.userManager = userManager;
             this.roleManager = roleManager;
             this.passwordRepository=passwordRepository;
             this.uploadService = uploadService;
+            this.readJWTService=readJWTService;
         }
         public async Task<string> CreateStaff(StaffModel model)
         {
@@ -71,9 +74,22 @@ namespace ManagerLibrary.Repository.StaffReponsitory
             
         }
 
-        public async Task<List<DTOStaff>> GetAllStaff()
+        public async Task<List<DTOStaff>> GetAllStaff(string?search,string?roleId)
         {
-            var users= await userManager.Users.ToListAsync();
+            var users =await userManager.Users.ToListAsync();
+            if (!string.IsNullOrEmpty(search))
+            {
+                users = users.Where(us => us.UserName!.Contains(search) || us.Email!.Contains(search)).ToList();
+            }
+            if(!string.IsNullOrEmpty(roleId))
+            {
+                var role = await roleManager.FindByIdAsync(roleId);
+                if (role != null)
+                {
+                    var userRole = await userManager.GetUsersInRoleAsync(role.Name!);
+                    users = userRole.ToList();
+                }
+            }
             List<DTOStaff> listStaff = new List<DTOStaff>();
             foreach(var user in users)
             {
@@ -85,8 +101,8 @@ namespace ManagerLibrary.Repository.StaffReponsitory
                     {
                         Id = user.Id,
                         RoleId = roleIds.Id,
-                        UserName = user.UserName,
-                        Email = user.Email,
+                        UserName = user.UserName!,
+                        Email = user.Email!,
                         Avatar = user.Avatar,
                         Phone = user.Phone,
                         Address = user.Address,
@@ -124,7 +140,7 @@ namespace ManagerLibrary.Repository.StaffReponsitory
                     Address = user.Address,
                     Gender = user.Gender,
                     Role = String.Join("", roles),
-                    UrlAvatar = uploadService.GetUrlImage("Book",user.Avatar),
+                    UrlAvatar = uploadService.GetUrlImage("Avatar",user.Avatar),
 
                 };
             }
@@ -154,6 +170,11 @@ namespace ManagerLibrary.Repository.StaffReponsitory
                 }
                 await userManager.UpdateAsync(user);
             }
+        }
+        public async  Task<DTOStaff> GetStaffToken()
+        {
+            var useid = await readJWTService.ReadJWT();
+            return await GetStaff(useid);
         }
     }
 }

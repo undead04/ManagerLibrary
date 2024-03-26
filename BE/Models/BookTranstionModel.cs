@@ -2,10 +2,10 @@
 {
     public class BookTranstionModel
     {
-        public string StaffId { get; set; } = string.Empty;
-        public int MemebrId { get; set; }
-        public string BallotType { get; set; } = string.Empty;
-        public List<BookTranstionDetailModel>? TranstionBookDetail { get; set; }
+      
+        public int MemberId { get; set; }
+        
+        public List<BookTranstionDetailModel>? TransitionBookDetail { get; set; }
 
     }
     

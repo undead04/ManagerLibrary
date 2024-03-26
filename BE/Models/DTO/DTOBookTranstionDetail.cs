@@ -10,5 +10,6 @@
         public DateTime BorrowDate { get; set; }
         public string Status { get; set; } = string.Empty;
         public DateTime ReturnDate { get; set; }
+        public decimal Price { get; set; }
     }
 }

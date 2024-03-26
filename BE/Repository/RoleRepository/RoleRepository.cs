@@ -126,7 +126,7 @@ namespace ManagerLibrary.Repository.RoleRepository
             if (role != null)
             {
                 role.Name = model.Name;
-                await claimsSerivce.DeleteClaims(role);
+                role= await claimsSerivce.DeleteClaims(role);
                 if (model.claims!.IsBookRead)
                 {
                     await claimsSerivce.CreateClaims(role, "book", "view");
@@ -195,7 +195,8 @@ namespace ManagerLibrary.Repository.RoleRepository
                 {
                     await claimsSerivce.CreateClaims(role, "income", "view");
                 }
-                var result = await roleManager.UpdateAsync(role);
+
+                await roleManager.UpdateAsync(role);
             }
         }
         public async Task<RoleDetailDTO> GetRole(string Id)

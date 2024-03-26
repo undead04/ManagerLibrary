@@ -2,6 +2,8 @@
 using ManagerLibrary.Services.AccountService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ManagerLibrary.Model.DTO;
+using ManagerLibrary.Models.DTO;
 
 namespace ManagerLibrary.Controllers
 {
@@ -24,10 +26,10 @@ namespace ManagerLibrary.Controllers
                 var token = await accountService.SignIn(model);
                 if (token == null)
                 {
-                    return BadRequest(Repository<string>.WithMessage("Sai mật khẩu hoặc mật khẩu", 200));
+                    return BadRequest(Repository<string>.WithMessage("Sai mật khẩu hoặc email", 400));
                 }
 
-                return Ok(Repository<string>.WithData(token, 200));
+                return Ok(Repository<DTOLogin>.WithData(token, 200));
             }
             catch
             {

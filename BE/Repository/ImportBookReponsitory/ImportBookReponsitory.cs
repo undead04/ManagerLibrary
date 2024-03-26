@@ -50,15 +50,18 @@ namespace ManagerLibraryAPI.Repository.ImportBookReponsitory
             }
         }
 
-        public async Task<List<DTOImportBook>> GetAllImportBook()
+        public async Task<List<DTOImportBook>> GetAllImportBook(string? staffId)
         {
             var importBook = await context.importReceipts.Include(f=>f.User).ToListAsync();
-
+            if (!string.IsNullOrEmpty(staffId))
+            {
+                importBook = importBook.Where(im => im.UserId == staffId).ToList();
+            }
             return importBook.Select(im => new DTOImportBook
             {
                 Id=im.Id,
                 Create_At=im.Create_At,
-                UserName=im.User!.UserName,
+                UserName=im.User!.UserName!,
                 
             }).ToList();
            

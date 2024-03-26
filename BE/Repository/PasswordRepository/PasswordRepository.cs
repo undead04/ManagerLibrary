@@ -1,7 +1,22 @@
-﻿namespace ManagerLibrary.Repository.PasswordRepository
+﻿using ManagerLibrary.Data;
+using ManagerLibrary.Models;
+using ManagerLibrary.Services.ReadJWTService;
+using Microsoft.AspNetCore.Identity;
+
+namespace ManagerLibrary.Repository.PasswordRepository
 {
     public class PasswordRepository : IPasswordRepository
     {
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly IReadJWTService readJWTService;
+        private readonly SignInManager<ApplicationUser> signInManager;
+
+        public PasswordRepository(UserManager<ApplicationUser> userManager,IReadJWTService readJWTService, SignInManager<ApplicationUser> signInManager) 
+        { 
+            this.userManager=userManager;
+            this.readJWTService=readJWTService;
+            this.signInManager = signInManager;
+        }
         public string CreatePassword()
         {
             Random random = new Random();
@@ -31,5 +46,17 @@
             }
             return password;
         }
+        public async Task ChangePassword(ChangePasswordModel model)
+        {
+            var userid =await readJWTService.ReadJWT();
+            var user = await userManager.FindByIdAsync(userid);
+            bool isEqual = model.ConfirmPassword == model.NewPassword;
+            if (isEqual&&user!=null)
+            {
+                await userManager.ChangePasswordAsync(user, model.PasswordPresent, model.NewPassword);
+                await signInManager.RefreshSignInAsync(user);
+            }
+        }
     }
 }
+

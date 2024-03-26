@@ -6,7 +6,8 @@ namespace ManagerLibraryAPI.Repository.ImportBookReponsitory
     public interface IImportBookReponsitory
     {
         Task CreateImportBook(ImportBookMode model);
-        Task<List<DTOImportBook>> GetAllImportBook();
+        Task<List<DTOImportBook>> GetAllImportBook(string?staffId);
         Task<List<DTOImportBookDetail>> GetImportBookDetail(int Id);
+       
     }
 }

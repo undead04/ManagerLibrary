@@ -17,14 +17,15 @@ namespace ManagerLibrary.Services.ClaimsService
             await roleManager.AddClaimAsync(role, claims);
         }
 
-        public async Task DeleteClaims(IdentityRole role)
+        public async Task<IdentityRole> DeleteClaims(IdentityRole role)
         {
             var existingClaims = await roleManager.GetClaimsAsync(role);
             foreach (var claim in existingClaims)
             {
                 await roleManager.RemoveClaimAsync(role, claim);
             }
-            await roleManager.UpdateAsync(role);
+            var result= await roleManager.UpdateAsync(role);
+            return role;
         }
     }
 }

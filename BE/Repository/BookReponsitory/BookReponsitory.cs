@@ -60,15 +60,16 @@ namespace ManagerLibrary.Repository.BookReponsitory
         {
             var book = await context.books
                 .Include(f=>f.Category)
-                .Include(f=>f.bookTransactionDetails)
+                .Include(f=>f.bookTransactionDetails)!
+                .ThenInclude(f=>f.BookTransactions)!
                 .Include(f=>f.importReceiptsDetails)
                 .Where(bo => bo.Status == true).FirstOrDefaultAsync(bo => bo.Id == id);
             if(book==null)
             {
                 return null;
             }
-            int quantityImport=book.importReceiptsDetails!.Count();
-            int quantityExport=book.bookTransactionDetails!.Where(bo=>bo.ReturnDate==DateTime.MinValue&&bo.BookTransactions!.BallotType=="X").Count();
+            int quantityImport=book.importReceiptsDetails!.Sum(im=>im.Quantity);
+            int quantityExport = book.bookTransactionDetails!.Where(bo => bo.ReturnDate == DateTime.MinValue && bo.BookTransactions!.BallotType == "X").Sum(ex => ex.Quantity);
            
             return new DTOBook
             {
