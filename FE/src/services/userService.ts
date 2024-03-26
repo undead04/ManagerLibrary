@@ -1,13 +1,6 @@
+import { IClaim } from "../type";
 import api from "./api";
 import ResponseWrapper from "./ResponseWrapper";
-
-export type LoginInfo = {
-	id: number;
-	name: string;
-	email: string;
-	password: string;
-	accessToken: string;
-};
 
 export type OrderInfo = {
 	id: number;
@@ -28,33 +21,23 @@ export type accountInfo<T> = {
 	orders: Array<T>;
 	ordersDetail: Array<Array<{ id: number; name_Game: string }>>;
 };
+
 const login = (email: string, password: string) => {
 	const data = { email, password };
 	return api
-		.post<ResponseWrapper<LoginInfo>>(api.url.login, data)
-		.then((res) => res.data);
-};
-
-const register = (name: string, email: string, password: string) => {
-	const data = { name, email, password };
-	return api
-		.post<ResponseWrapper<LoginInfo>>(api.url.register, data)
-		.then((res) => res.data);
-};
-
-const order = (userId: number) => {
-	const data = { userId };
-	return api
-		.post<ResponseWrapper<accountInfo<OrderInfo>>>(
-			`${api.url.cart}/myAccount`,
+		.post<ResponseWrapper<{ token: string; claims: IClaim }>>(
+			api.url.login,
 			data,
 		)
-		.then((res) => res.data);
+		.then((res) => res.data)
+		.catch((err) => {
+			console.log(err);
+			throw err.response.data as ResponseWrapper<string>;
+		});
 };
+
 const userService = {
 	login,
-	register,
-	order,
 };
 
 export default userService;

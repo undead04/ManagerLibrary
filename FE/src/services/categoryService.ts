@@ -25,9 +25,7 @@ const create = ({
 		.post<ResponseWrapper<null>>(api.url.category, data)
 		.then((res) => res.data)
 		.catch((err) => {
-			console.log(err.response.data.message.Name);
-
-			alert(err.response.data.message.Name);
+			throw err.response.data;
 		});
 };
 

@@ -4,26 +4,31 @@ import {
 	createSlice,
 } from "@reduxjs/toolkit";
 import { Bounce, toast } from "react-toastify";
-import IGuest from "../../type/guest.type";
-import guestService from "../../services/guestService";
+import { IStaff } from "../../type";
+import staffService from "../../services/staffService";
 
 interface IState {
-	guests: IGuest[];
+	staffs: IStaff[];
 	isLoading: boolean;
-	edittingGuest: IGuest | null;
+	edittingStaff: IStaff | null;
 }
 
 const initialState: IState = {
-	guests: [],
-	edittingGuest: null,
+	staffs: [],
+	edittingStaff: null,
 	isLoading: false,
 };
 
-export const getGuests = createAsyncThunk<IGuest[], { q?: string }>(
-	"guests/get",
-	async ({ q }: { q?: string }) => {
+export const getStaffs = createAsyncThunk<
+	IStaff[],
+	{ q?: string; roleId?: string }
+>(
+	"staffs/get",
+	async ({ q, roleId }: { q?: string; roleId?: string }) => {
 		try {
-			const data = await guestService.list(q).then((res) => res.data);
+			const data = await staffService
+				.list(q, roleId)
+				.then((res) => res.data);
 			return data ?? []; // Trả về một mảng rỗng nếu data là undefined
 		} catch (error) {
 			console.log(error);
@@ -32,27 +37,32 @@ export const getGuests = createAsyncThunk<IGuest[], { q?: string }>(
 	},
 );
 
-export const getGuest = createAsyncThunk(
-	"guest/get",
+export const getStaff = createAsyncThunk(
+	"staff/get",
 	async (id: string) => {
 		try {
-			const data = await guestService.read({ id }).then((res) => {
+			const data = await staffService.read({ id }).then((res) => {
 				return res.data;
 			});
-			return data as IGuest;
+			return data as IStaff;
 		} catch (error) {
 			console.error(error);
 		}
 	},
 );
 
-export const addGuest = createAsyncThunk(
-	"guests/add",
-	async (data: Omit<IGuest, "id">) => {
+export const addStaff = createAsyncThunk(
+	"staffs/add",
+	async (data: Omit<IStaff, "id">) => {
 		try {
 			const frm = new FormData();
-			frm.append("Name", data.name);
+			frm.append("UserName", data.userName);
 			frm.append("Phone", data.phone);
+			frm.append("RoleId", data.roleId);
+			frm.append("Email", data.email);
+			if (data.password) {
+				frm.append("Password", data.password);
+			}
 
 			frm.append("Address", data.address);
 			frm.append("Gender", JSON.stringify(data.gender));
@@ -65,11 +75,11 @@ export const addGuest = createAsyncThunk(
 			}
 			console.log(data);
 
-			await guestService
+			await staffService
 				.create({ data: frm })
 				.then(() => {
-					toast.success("Add books successfully", {
-						position: "top-center",
+					toast.success("Create staff successfully", {
+						position: "top-right",
 						autoClose: 5000,
 						hideProgressBar: false,
 						closeOnClick: true,
@@ -89,7 +99,7 @@ export const addGuest = createAsyncThunk(
 			for (const key in messages) {
 				const value = messages[key];
 				toast.error(`${key}: ${value}`, {
-					position: "top-center",
+					position: "top-right",
 					autoClose: 5000,
 					hideProgressBar: false,
 					closeOnClick: true,
@@ -106,13 +116,18 @@ export const addGuest = createAsyncThunk(
 	},
 );
 
-export const updateGuest = createAsyncThunk(
-	"guest/update",
-	async ({ data, id }: { data: Omit<IGuest, "id">; id: string }) => {
+export const updateStaff = createAsyncThunk(
+	"staff/update",
+	async ({ data, id }: { data: Omit<IStaff, "id">; id: string }) => {
 		try {
 			const frm = new FormData();
-			frm.append("Name", data.name);
+			frm.append("UserName", data.userName);
 			frm.append("Phone", data.phone);
+			frm.append("RoleId", data.roleId);
+			frm.append("Email", data.email);
+			if (data.password) {
+				frm.append("Password", data.password);
+			}
 
 			frm.append("Address", data.address);
 			frm.append("Gender", JSON.stringify(data.gender));
@@ -123,11 +138,11 @@ export const updateGuest = createAsyncThunk(
 					data.avatar[data.avatar.length - 1].originFileObj,
 				);
 			}
-			await guestService
+			await staffService
 				.edit({ id, data: frm })
 				.then(() => {
 					toast.success("Update successfully!", {
-						position: "top-center",
+						position: "top-right",
 						autoClose: 5000,
 						hideProgressBar: false,
 						closeOnClick: true,
@@ -147,7 +162,7 @@ export const updateGuest = createAsyncThunk(
 			for (const key in messages) {
 				const value = messages[key];
 				toast.error(`${key}: ${value}`, {
-					position: "top-center",
+					position: "top-right",
 					autoClose: 5000,
 					hideProgressBar: false,
 					closeOnClick: true,
@@ -164,11 +179,11 @@ export const updateGuest = createAsyncThunk(
 	},
 );
 
-export const removeGuest = createAsyncThunk(
-	"guest/remove",
+export const removeStaff = createAsyncThunk(
+	"staff/remove",
 	async ({ id }: { id: string }) => {
 		try {
-			guestService.remove({ id }).then((res) => {
+			staffService.remove({ id }).then((res) => {
 				console.log(res);
 			});
 			return id;
@@ -178,51 +193,51 @@ export const removeGuest = createAsyncThunk(
 	},
 );
 
-export const guestSlice = createSlice({
-	name: "guest",
+export const staffSlice = createSlice({
+	name: "staff",
 	initialState,
 	reducers: {
-		startEdittingGuest: (state, action: PayloadAction<IGuest>) => {
+		startEdittingStaff: (state, action: PayloadAction<IStaff>) => {
 			state.isLoading = true;
-			state.edittingGuest = action.payload;
+			state.edittingStaff = action.payload;
 			state.isLoading = false;
 		},
-		cancelEdittingGuest: (state) => {
+		cancelEdittingStaff: (state) => {
 			state.isLoading = true;
-			state.edittingGuest = null;
+			state.edittingStaff = null;
 			state.isLoading = false;
 		},
 	},
 	extraReducers: (builder) =>
 		builder
-			.addCase(getGuests.pending, (state) => {
+			.addCase(getStaffs.pending, (state) => {
 				state.isLoading = true;
 			})
-			.addCase(getGuests.fulfilled, (state, action) => {
-				state.guests = action.payload;
+			.addCase(getStaffs.fulfilled, (state, action) => {
+				state.staffs = action.payload;
 				state.isLoading = false;
 			})
-			.addCase(getGuests.rejected, (state) => {
+			.addCase(getStaffs.rejected, (state) => {
 				state.isLoading = false;
 			})
-			.addCase(addGuest.fulfilled, (state) => {
-				state.edittingGuest = null;
+			.addCase(addStaff.fulfilled, (state) => {
+				state.edittingStaff = null;
 				state.isLoading = false;
 			})
 
-			.addCase(removeGuest.fulfilled, (state, action) => {
+			.addCase(removeStaff.fulfilled, (state, action) => {
 				if (action.payload) {
-					const filterData = state.guests.filter(
+					const filterData = state.staffs.filter(
 						(c) => c.id !== action.payload,
 					);
-					state.guests = filterData;
+					state.staffs = filterData;
 				}
 			}),
 });
 
 // Action creators are generated for each case reducer function
 
-export default guestSlice.reducer;
+export default staffSlice.reducer;
 
-export const { startEdittingGuest, cancelEdittingGuest } =
-	guestSlice.actions;
+export const { startEdittingStaff, cancelEdittingStaff } =
+	staffSlice.actions;

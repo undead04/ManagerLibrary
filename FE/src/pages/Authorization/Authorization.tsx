@@ -1,166 +1,181 @@
-import React, { useState } from "react";
-import { Button, Input, Modal, Space, Table } from "antd";
+import React, { useEffect, useState } from "react";
+import { Alert, Button, Modal, Spin, Table } from "antd";
 import type { TableColumnsType } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
 	DeleteOutlined,
 	EditOutlined,
-	PlusCircleOutlined,
+	EyeOutlined,
 } from "@ant-design/icons";
 
-import type { SearchProps } from "antd/es/input/Search";
 import AuthorizationForm from "./AuthorizationForm";
+import { IRole } from "../../type";
+import { RootState, useAppDispatch } from "../../context/store";
+import { useSelector } from "react-redux";
+import {
+	getRole,
+	getRoles,
+	removeRole,
+	startEdittingRole,
+} from "../../context/Role/role.slice";
 
-const { Search } = Input;
-
-interface DataType {
+interface IRoleExtend extends IRole {
 	key: React.Key;
-	role: string;
-}
-
-const columns: TableColumnsType<DataType> = [
-	{
-		title: "Role",
-		dataIndex: "role",
-	},
-	{
-		title: "",
-		dataIndex: "key",
-		render: (id: string) => {
-			return (
-				<Link
-					className="text-blue-500 underline"
-					to={`/Authorization/edit/${id} `}
-				>
-					<EditOutlined />
-				</Link>
-			);
-		},
-	},
-	{
-		title: "",
-		dataIndex: "key",
-		render: (id: string) => {
-			return (
-				<Link
-					className="text-red-500 underline"
-					to={`/Authorization/delete/${id} `}
-				>
-					<DeleteOutlined />
-				</Link>
-			);
-		},
-	},
-];
-
-const data: DataType[] = [];
-for (let i = 0; i < 46; i++) {
-	data.push({
-		key: i,
-		role: `Admin ${i}`,
-	});
+	index: number;
 }
 
 const Authorization = () => {
 	const navigate = useNavigate();
-	const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>(
-		[],
+	const dispatch = useAppDispatch();
+	const roles = useSelector((state: RootState) => state.role.roles);
+
+	const isLoading = useSelector(
+		(state: RootState) => state.role.isLoading,
 	);
-	const [loading, setLoading] = useState(false);
-	// Modal
-	const [open, setOpen] = useState(false);
-	const showModal = () => {
-		setOpen(true);
+
+	const data: IRoleExtend[] = roles.map((r, index) => ({
+		...r,
+		index: index + 1,
+		key: r.id,
+	}));
+
+	const handleStartEdit = (id: string) => {
+		dispatch(getRole(id))
+			.unwrap()
+			.then((res) => {
+				console.log(res);
+				if (res) {
+					dispatch(startEdittingRole(res));
+				}
+			});
 	};
 
-	const hideModal = () => {
-		setOpen(false);
-	};
-	const start = () => {
-		setLoading(true);
-		// ajax request after empty completing
-		setTimeout(() => {
-			setSelectedRowKeys([]);
-			setLoading(false);
-		}, 1000);
+	const handleStartDelete = (id: string) => {
+		setDeleteId(id);
+		setOpenDelete(true);
 	};
 
-	const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-		console.log("selectedRowKeys changed: ", newSelectedRowKeys);
-		setSelectedRowKeys(newSelectedRowKeys);
+	const handleCancelDelete = () => {
+		setDeleteId("");
+		setOpenDelete(false);
 	};
 
-	const rowSelection = {
-		selectedRowKeys,
-		onChange: onSelectChange,
-	};
-	const hasSelected = selectedRowKeys.length > 0;
-	const onSearch: SearchProps["onSearch"] = (value, _e, info) =>
-		console.log(info?.source, value);
+	const columns: TableColumnsType<IRoleExtend> = [
+		{
+			title: "#",
+			dataIndex: "index",
+		},
+		{
+			title: "Role",
+			dataIndex: "name",
+		},
+		{
+			title: "",
+			dataIndex: "id",
+			render: (id: string) => {
+				return (
+					<div className="flex gap-2 items-center justify-center">
+						<Button className="p-0 aspect-square flex items-center justify-center">
+							<EyeOutlined />
+						</Button>
+						<Button
+							onClick={() => handleStartEdit(id)}
+							className="text-blue-500 underline p-0 aspect-square flex items-center justify-center"
+						>
+							<EditOutlined />
+						</Button>
+						<Button
+							className="text-red-500 underline p-0 aspect-square flex items-center justify-center"
+							onClick={() => handleStartDelete(id)}
+						>
+							<DeleteOutlined />
+						</Button>
+					</div>
+				);
+			},
+		},
+	];
 
+	const reload = () => {
+		dispatch(getRoles());
+	};
+	const [openDelete, setOpenDelete] = useState(false);
+	const [deleteId, setDeleteId] = useState<string>();
+	const handleDelete = (deleteId: string) => {
+		dispatch(removeRole({ id: deleteId }))
+			.unwrap()
+			.then(() => {
+				setDeleteId("");
+				setOpenDelete(false);
+				reload();
+			});
+	};
+
+	useEffect(() => {
+		reload();
+	}, []);
 	return (
 		<div>
 			<Modal
-				width={800}
-				open={open}
-				onOk={hideModal}
-				onCancel={hideModal}
-				footer={null}
+				title="Delete a category"
+				open={openDelete}
+				onOk={() => {
+					if (deleteId) {
+						handleDelete(deleteId);
+					}
+				}}
+				onCancel={handleCancelDelete}
 			>
-				<AuthorizationForm />
+				<p>This action will not allow redo. Confirm deletion?</p>
 			</Modal>
 
-			<div className="text-3xl font-semibold my-2">
-				Authorization - List
-			</div>
+			<h4 className="text-3xl bg-blue-600 py-4 text-white font-semibold mb-4 text-center rounded-xl shadow-md">
+				Authorization - Roles
+			</h4>
 
-			<div className="mb-4 flex items-center justify-between">
-				<div>
-					<Button
-						type="primary"
-						onClick={start}
-						disabled={!hasSelected}
-						loading={loading}
-					>
-						Reload
-					</Button>
-					<span style={{ marginLeft: 8 }}>
-						{hasSelected
-							? `Selected ${selectedRowKeys.length} items`
-							: ""}
-					</span>
+			<div className="grid grid-cols-2 gap-8">
+				<div className="shadow-lg p-4">
+					<div className="mb-4 flex items-center justify-between">
+						<div>
+							<Button onClick={reload} size="large" type="primary">
+								Reload
+							</Button>
+						</div>
+					</div>
+
+					{!isLoading && (
+						<Table
+							size="large"
+							onRow={(Authorization) => {
+								return {
+									onDoubleClick: (event) => {
+										event.preventDefault();
+										navigate(`/Authorization/d/${Authorization.key}`);
+									},
+								};
+							}}
+							columns={columns}
+							dataSource={data}
+						/>
+					)}
+
+					{isLoading && (
+						<div className="w-[50%] my-8 mx-auto">
+							<Spin tip={"Loading"} spinning={true}>
+								<Alert
+									type="info"
+									message="Loading data"
+									description="Data is loading. Please wait..."
+								/>
+							</Spin>
+						</div>
+					)}
 				</div>
 
-				<div>
-					<Button
-						type="primary"
-						icon={<PlusCircleOutlined />}
-						onClick={showModal}
-					>
-						Add
-					</Button>
+				<div className="shadow-lg px-8 py-4">
+					<AuthorizationForm />
 				</div>
 			</div>
-			<div className="mb-4">
-				<Search
-					placeholder="input search text"
-					onSearch={onSearch}
-					enterButton
-				/>
-			</div>
-			<Table
-				onRow={(Authorization) => {
-					return {
-						onDoubleClick: (event) => {
-							event.preventDefault();
-							navigate(`/Authorization/d/${Authorization.key}`);
-						},
-					};
-				}}
-				rowSelection={rowSelection}
-				columns={columns}
-				dataSource={data}
-			/>
 		</div>
 	);
 };

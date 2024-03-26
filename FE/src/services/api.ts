@@ -1,10 +1,14 @@
 import axios from "axios";
+import { RootState, store } from "../context/store";
 
 const url = {
 	baseUrl: "https://localhost:7119/api/",
 	category: "/category",
 	book: "/book",
 	guest: "/member",
+	login: "/account",
+	role: "/role",
+	staff: "/staff",
 };
 
 const instance = axios.create({
@@ -13,6 +17,14 @@ const instance = axios.create({
 		"Content-Type": "application/json",
 		Accept: "application/json",
 	},
+});
+
+instance.interceptors.request.use((request) => {
+	const state: RootState = store.getState(); //get current state
+	if (state.auth.user?.token) {
+		request.headers.Authorization = `Bearer ${state.auth.user.token}`;
+	}
+	return request;
 });
 
 // instance.interceptors.request.use((request) => {
