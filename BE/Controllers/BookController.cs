@@ -151,6 +151,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpPut("stopPublishing/{id}")]
+        [Authorize(Policy = "BookEditCreate")]
         public async Task<IActionResult> StopPublishing(int id)
         {
             try

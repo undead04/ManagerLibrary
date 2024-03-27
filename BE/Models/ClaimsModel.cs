@@ -19,5 +19,8 @@
         public bool IsImportBookRead { get; set; }
         public bool IsImportBookCreate { get; set; }
         public bool IsIncomeRead { get; set; }
+        public bool IsRoleRead { get; set; }
+        public bool IsRoleEditAndCreate { get; set; }
+        public bool IsRoleDelete { get; set; }
     }
 }

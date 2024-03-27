@@ -118,7 +118,10 @@ namespace ManagerLibrary.Repository.BookReponsitory
         }
        public async Task<List<DTOBook>> getAllBook(string?search,int? categoryId)
         {
-            var book= context.books.Include(f=>f.Category).AsQueryable();
+            var book= context.books.Include(f=>f.Category)
+                .Include(f=>f.bookTransactionDetails)!.ThenInclude(f=>f.BookTransactions)!
+                .Include(f=>f.importReceiptsDetails)
+                .AsQueryable();
             if(!String.IsNullOrEmpty(search))
             {
                 book=book.Where(bo=>bo.Title.Contains(search)||bo.Author.Contains(search));
@@ -127,6 +130,7 @@ namespace ManagerLibrary.Repository.BookReponsitory
             {
                 book = book.Where(bo => bo.CategoryId == categoryId);
             }
+           
             return await book.Where(bo => bo.Status == true).Select(bo => new DTOBook
              {
                  Id = bo.Id,
@@ -138,9 +142,11 @@ namespace ManagerLibrary.Repository.BookReponsitory
                  Image = bo.Image,
                  Price = bo.Price,
                  UrlImage = uploadService.GetUrlImage("Book",bo.Image),
-                 NameCategory=bo.Category!.Name
-                
-             }).ToListAsync();
+                 NameCategory=bo.Category!.Name,
+                 Quantity=bo.importReceiptsDetails!.Sum(im=>im.Quantity),
+                 PresentQuantity= bo.importReceiptsDetails!.Sum(im => im.Quantity)-bo.bookTransactionDetails!.Where(bo => bo.ReturnDate == DateTime.MinValue && bo.BookTransactions!.BallotType == "X").Sum(ex => ex.Quantity)
+
+        }).ToListAsync();
         }
         public async Task StopPublishing(int id)
         {

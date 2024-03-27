@@ -92,6 +92,18 @@ namespace ManagerLibrary.Repository.RoleRepository
                 {
                     await claimsSerivce.CreateClaims(role, "import", "view");
                 }
+                if (model.claims!.IsRoleRead)
+                {
+                    await claimsSerivce.CreateClaims(role, "role", "view");
+                }
+                if (model.claims!.IsRoleEditAndCreate)
+                {
+                    await claimsSerivce.CreateClaims(role, "role", "editcreate");
+                }
+                if (model.claims!.IsBookDelete)
+                {
+                    await claimsSerivce.CreateClaims(role, "role", "delete");
+                }
             }
 
 
@@ -194,6 +206,18 @@ namespace ManagerLibrary.Repository.RoleRepository
                 if (model.claims!.IsBorrowBookRead)
                 {
                     await claimsSerivce.CreateClaims(role, "income", "view");
+                }
+                if (model.claims!.IsRoleRead)
+                {
+                    await claimsSerivce.CreateClaims(role, "role", "view");
+                }
+                if (model.claims!.IsRoleEditAndCreate)
+                {
+                    await claimsSerivce.CreateClaims(role, "role", "editcreate");
+                }
+                if (model.claims!.IsBookDelete)
+                {
+                    await claimsSerivce.CreateClaims(role, "role", "delete");
                 }
 
                 await roleManager.UpdateAsync(role);

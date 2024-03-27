@@ -97,7 +97,8 @@ namespace ManagerLibrary.Repository.BookTransactionReponsitory
                 NameBook=x.Book!.Title,
                 ReturnDate=x.ReturnDate,
                 Price=x.Price,
-                Status = x.ReturnDate.Date == DateTime.MinValue.Date && DateTime.Now.Date > x.DeadLineDate.Date || x.ReturnDate.Date > x.DeadLineDate.Date ? "Đã quá hạn" :x.ReturnDate.Date<x.DeadLineDate?"Trả đúng hạn": string.Empty
+                Status = x.ReturnDate.Date == DateTime.MinValue&&DateTime.Now.Date>x.DeadLineDate.Date||x.ReturnDate!=DateTime.MinValue&&x.ReturnDate>x.DeadLineDate?
+                "Đã quá hạn":x.ReturnDate!=DateTime.MinValue&&x.ReturnDate<=x.DeadLineDate?"Trả đúng hạn":string.Empty
             }).ToList();
         }
 
