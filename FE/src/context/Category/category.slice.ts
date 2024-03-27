@@ -51,11 +51,24 @@ export const addCategory = createAsyncThunk(
 	"categorys/add",
 	async (data: Omit<ICategory, "categoryId">) => {
 		try {
-			categoryService.create({ data });
+			await categoryService.create({ data }).catch((err) => {
+				toast.error(err.message.Name, {
+					position: "top-center",
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+					theme: "light",
+					transition: Bounce,
+				});
+				throw err;
+			});
 		} catch (error) {
 			console.log(error);
 
-			return error;
+			throw error;
 		}
 	},
 );

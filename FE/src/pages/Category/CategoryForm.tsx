@@ -39,20 +39,25 @@ const CategoryForm = ({
 				.then(() => {
 					dispatch(getCategorys({}));
 					handleClose();
+
+					form.resetFields();
 				})
 				.catch((err) => {
 					console.log(err);
 				});
 		} else {
 			dispatch(addCategory({ name, description }))
+				.unwrap()
 				.then(() => {
 					dispatch(getCategorys({}));
-				})
-				.then(() => {
 					handleClose();
+
+					form.resetFields();
+				})
+				.catch((err) => {
+					console.log(err);
 				});
 		}
-		form.resetFields();
 	};
 
 	useEffect(() => {
@@ -74,7 +79,7 @@ const CategoryForm = ({
 					<div>
 						<div className="text-3xl font-semibold mb-8">
 							{edittingCategory?.categoryId
-								? `Edit Category ${edittingCategory?.categoryId} `
+								? `Edit category - ${edittingCategory.name} `
 								: "Add a new Category"}
 						</div>
 						<Form
