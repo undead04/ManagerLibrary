@@ -103,6 +103,9 @@ namespace ManagerLibrary.Services.AccountService
                     IsIncomeRead=roleClaims.Any(ex=>ex.Type=="income"&&ex.Value=="view"),
                     IsImportBookRead=roleClaims.Any(ex=>ex.Type=="import"&&ex.Value=="view"),
                     IsImportBookCreate = roleClaims.Any(ex => ex.Type == "import" && ex.Value == "editcreate"),
+                    IsRoleRead = roleClaims.Any(ex => ex.Type == "role" && ex.Value == "view"),
+                    IsRoleDelete = roleClaims.Any(ex => ex.Type == "role" && ex.Value == "delete"),
+                    IsRoleEditAndCreate = roleClaims.Any(ex => ex.Type == "role" && ex.Value == "editcreate"),
 
                 }
             };
