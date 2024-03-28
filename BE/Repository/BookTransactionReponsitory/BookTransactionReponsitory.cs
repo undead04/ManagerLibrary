@@ -90,7 +90,7 @@ namespace ManagerLibrary.Repository.BookTransactionReponsitory
             return bookTranstionDetail.Select(x => new DTOBookTranstionDetail
             {
                 Id = x.Id,
-                BookId=x.Id,
+                BookId=x.BookId,
                 Quantity=x.Quantity,
                 BorrowDate=x.BorrowDate,
                 DeadLineDate=x.DeadLineDate,
