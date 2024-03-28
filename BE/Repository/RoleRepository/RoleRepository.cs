@@ -255,6 +255,9 @@ namespace ManagerLibrary.Repository.RoleRepository
                     IsIncomeRead=existingClaims.Any(ex=>ex.Type=="income"&&ex.Value=="view"),
                     IsImportBookRead=existingClaims.Any(ex=>ex.Type=="import"&&ex.Value=="view"),
                     IsImportBookCreate = existingClaims.Any(ex => ex.Type == "import" && ex.Value == "editcreate"),
+                    IsRoleRead= existingClaims.Any(ex => ex.Type == "role" && ex.Value == "view"),
+                    IsRoleDelete= existingClaims.Any(ex => ex.Type == "role" && ex.Value == "delete"),
+                    IsRoleEditAndCreate= existingClaims.Any(ex => ex.Type == "role" && ex.Value == "editcreate"),
 
                 }
                 
