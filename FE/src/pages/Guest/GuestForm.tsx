@@ -173,6 +173,12 @@ const GuestForm = (props: GuestFormProps) => {
 							name={"name"}
 							initialValue={edittingGuest?.name}
 							label="Username:"
+							rules={[
+								{
+									required: true,
+									message: "This field is required",
+								},
+							]}
 						>
 							<Input />
 						</Form.Item>
@@ -181,6 +187,12 @@ const GuestForm = (props: GuestFormProps) => {
 							name={"phone"}
 							initialValue={edittingGuest?.phone}
 							label="Phone Number:"
+							rules={[
+								{
+									required: true,
+									message: "This field is required",
+								},
+							]}
 						>
 							<Input />
 						</Form.Item>
@@ -189,6 +201,12 @@ const GuestForm = (props: GuestFormProps) => {
 							name={"gender"}
 							initialValue={edittingGuest?.gender}
 							label="Gender"
+							rules={[
+								{
+									required: true,
+									message: "This field is required",
+								},
+							]}
 						>
 							<Radio.Group>
 								<Radio value={true}> Male </Radio>
@@ -202,6 +220,12 @@ const GuestForm = (props: GuestFormProps) => {
 							name={"address"}
 							initialValue={edittingGuest?.address}
 							label="Address:"
+							rules={[
+								{
+									required: true,
+									message: "This field is required",
+								},
+							]}
 						>
 							<TextArea rows={2} />
 						</Form.Item>
@@ -238,11 +262,6 @@ const GuestForm = (props: GuestFormProps) => {
 						<Form.Item>
 							<Button type="primary" htmlType="submit" size="large">
 								Save
-							</Button>
-						</Form.Item>
-						<Form.Item>
-							<Button type="default" htmlType="reset" size="large">
-								Cancel
 							</Button>
 						</Form.Item>
 					</div>

@@ -27,11 +27,14 @@ const Login = () => {
 			});
 	};
 	return (
-		<div className="p-12 rounded-xl shadow-lg">
-			<div className="pt-4 pb-2">
-				<h5 className="text-center pb-2 text-4xl">Login</h5>
-				<p className="text-center text-md">
-					Enter your username & password to login
+		<div className="p-12 rounded-xl shadow-lg w-[700px]">
+			<div className="pt-4 pb-2 space-y-2">
+				<h5 className="text-center pb-2 text-4xl font-serif">
+					Login
+				</h5>
+				<img src="/login-face.jpeg" className="w-[200px] mx-auto" />
+				<p className="text-center text-md font-serif italic">
+					Enter your email & password to login
 				</p>
 			</div>
 
@@ -39,8 +42,7 @@ const Login = () => {
 				<Form
 					form={form}
 					name="basic"
-					labelCol={{ span: 10 }}
-					wrapperCol={{ span: 16 }}
+					layout="vertical"
 					style={{ maxWidth: 600 }}
 					initialValues={{ remember: true }}
 					onFinish={onFinish}
@@ -57,7 +59,7 @@ const Login = () => {
 							},
 						]}
 					>
-						<Input />
+						<Input size="large" />
 					</Form.Item>
 
 					<Form.Item<FieldType>
@@ -68,17 +70,22 @@ const Login = () => {
 								required: true,
 								message: "Please input your password!",
 							},
+							{
+								min: 8,
+								message: "Password required at least 8 characters",
+							},
 						]}
 					>
-						<Input.Password />
+						<Input.Password size="large" />
 					</Form.Item>
 
-					<Form.Item wrapperCol={{ offset: 10, span: 16 }}>
+					<Form.Item className="w-fit mx-auto mt-10">
 						<Button
-							className="bg-blue-500 text-white"
+							className="bg-blue-500 text-white w-[200px]"
 							htmlType="submit"
+							size="large"
 						>
-							Submit
+							Login
 						</Button>
 					</Form.Item>
 				</Form>

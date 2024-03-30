@@ -9,6 +9,9 @@ const url = {
 	login: "/account",
 	role: "/role",
 	staff: "/staff",
+	importBook: "/importbook",
+	borrowBook: "/booktransition",
+	statistic: "/Statistical",
 };
 
 const instance = axios.create({

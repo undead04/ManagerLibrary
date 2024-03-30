@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
-import { Breadcrumb, Button, Flex, Layout, theme } from "antd";
+import { Button, Flex, Layout, Tooltip, theme } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "../context/store";
 import { authLogout } from "../context/Auth/auth.slice";
+import { PoweroffOutlined } from "@ant-design/icons";
 
 const UserLayout = () => {
 	const navigate = useNavigate();
@@ -51,19 +52,16 @@ const UserLayout = () => {
 
 						<Content style={{ padding: "0 24px", minHeight: 280 }}>
 							<Flex align="center" justify="space-between">
-								<Breadcrumb style={{ margin: "16px 0" }}>
-									<Breadcrumb.Item>Home</Breadcrumb.Item>
-									<Breadcrumb.Item>List</Breadcrumb.Item>
-									<Breadcrumb.Item>App</Breadcrumb.Item>
-								</Breadcrumb>
-
-								<Button
-									className="ml-auto block"
-									onClick={handleLogout}
-									type="primary"
-								>
-									Log out
-								</Button>
+								<Tooltip title="Logout">
+									<Button
+										size="large"
+										className="ml-auto mb-8 p-3 flex items-center"
+										onClick={handleLogout}
+										type="primary"
+									>
+										<PoweroffOutlined />
+									</Button>
+								</Tooltip>
 							</Flex>
 							<Outlet />
 						</Content>

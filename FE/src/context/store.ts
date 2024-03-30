@@ -10,6 +10,8 @@ import authReducer from "./Auth/auth.slice";
 import persistStore from "redux-persist/es/persistStore";
 import roleReducer from "./Role/role.slice";
 import staffReducer from "./Staff/staff.slice";
+import bookEntryReducer from "./BookEntry/bookEntry.slice";
+import borrowBookReducer from "./BorrowBook/borrowBook.slice";
 
 const authPersistConfig = { key: "auth", storage };
 
@@ -21,6 +23,8 @@ export const store = configureStore({
 		guest: guestReducer,
 		role: roleReducer,
 		staff: staffReducer,
+		bookEntry: bookEntryReducer,
+		borrowBook: borrowBookReducer,
 	},
 	middleware: () => new Tuple(thunk),
 });

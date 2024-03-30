@@ -12,7 +12,6 @@ import type { TableColumnsType } from "antd";
 import {
 	DeleteOutlined,
 	EditOutlined,
-	EyeOutlined,
 	PlusCircleOutlined,
 } from "@ant-design/icons";
 
@@ -113,6 +112,14 @@ const Staff = () => {
 		{
 			title: "Username",
 			dataIndex: "userName",
+			filters: staffs.map((s) => ({
+				value: s.userName,
+				text: s.userName,
+			})),
+			filterSearch: true,
+			onFilter: (value: boolean | React.Key, record) => {
+				return record.userName === value;
+			},
 		},
 		{
 			title: "Avatar",
@@ -132,10 +139,26 @@ const Staff = () => {
 			title: "Role",
 			dataIndex: "role",
 			align: "center",
+			sorter: (a, b) => {
+				if (a.role && b.role) {
+					return a.role.localeCompare(b.role);
+				} else {
+					return 1;
+				}
+			},
 		},
 		{
 			title: "Email",
 			dataIndex: "email",
+			sorter: (a, b) => a.email.localeCompare(b.email),
+			filters: staffs.map((s) => ({
+				value: s.email,
+				text: s.email,
+			})),
+			filterSearch: true,
+			onFilter: (value: boolean | React.Key, record) => {
+				return record.email === value;
+			},
 		},
 		{
 			title: "Phone",
@@ -158,9 +181,6 @@ const Staff = () => {
 			render: (id: string) => {
 				return (
 					<div className="flex gap-2 items-center justify-center">
-						<Button className="p-0 aspect-square flex items-center justify-center">
-							<EyeOutlined />
-						</Button>
 						<Button
 							onClick={() => handleStartEdit(id)}
 							className="text-blue-500 underline p-0 aspect-square flex items-center justify-center"
@@ -179,9 +199,8 @@ const Staff = () => {
 		},
 	];
 
-	const onSearch: SearchProps["onSearch"] = (value, _e, info) => {
+	const onSearch: SearchProps["onSearch"] = (value) => {
 		dispatch(getStaffs({ q: value }));
-		console.log(info?.source, value);
 	};
 
 	return (

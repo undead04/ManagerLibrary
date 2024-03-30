@@ -2,11 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Alert, Button, Modal, Spin, Table } from "antd";
 import type { TableColumnsType } from "antd";
 import { useNavigate } from "react-router-dom";
-import {
-	DeleteOutlined,
-	EditOutlined,
-	EyeOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 import AuthorizationForm from "./AuthorizationForm";
 import { IRole } from "../../type";
@@ -75,9 +71,6 @@ const Authorization = () => {
 			render: (id: string) => {
 				return (
 					<div className="flex gap-2 items-center justify-center">
-						<Button className="p-0 aspect-square flex items-center justify-center">
-							<EyeOutlined />
-						</Button>
 						<Button
 							onClick={() => handleStartEdit(id)}
 							className="text-blue-500 underline p-0 aspect-square flex items-center justify-center"
@@ -129,7 +122,7 @@ const Authorization = () => {
 				<p>This action will not allow redo. Confirm deletion?</p>
 			</Modal>
 
-			<h4 className="text-3xl bg-blue-600 py-4 text-white font-semibold mb-4 text-center rounded-xl shadow-md">
+			<h4 className="text-3xl bg-blue-600 py-4 text-white font-semibold mb-4 text-center rounded-md">
 				Authorization - Roles
 			</h4>
 

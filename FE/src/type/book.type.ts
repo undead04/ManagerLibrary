@@ -9,8 +9,8 @@ interface IBook {
 	categoryId: string;
 	nameCategory: string;
 	urlImage: string;
-	quatity: string;
-	presentQuantity: string;
+	quantity: string;
+	presentQuantity: number;
 }
 
 interface IBookPost {

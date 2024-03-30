@@ -188,6 +188,12 @@ const BookForm = (props: BookFormType) => {
 				>
 					<Form.Item
 						initialValue={edittingBook?.title}
+						rules={[
+							{
+								required: true,
+								message: "This field is required",
+							},
+						]}
 						name={"title"}
 						label="Title:"
 					>
@@ -195,6 +201,12 @@ const BookForm = (props: BookFormType) => {
 					</Form.Item>
 					<Form.Item
 						initialValue={edittingBook?.isbn}
+						rules={[
+							{
+								required: true,
+								message: "This field is required",
+							},
+						]}
 						name={"isbn"}
 						label="ISBN id:"
 					>
@@ -202,6 +214,12 @@ const BookForm = (props: BookFormType) => {
 					</Form.Item>
 					<Form.Item
 						initialValue={edittingBook?.categoryId}
+						rules={[
+							{
+								required: true,
+								message: "This field is required",
+							},
+						]}
 						name={"categoryId"}
 						label="Category:"
 					>
@@ -220,6 +238,12 @@ const BookForm = (props: BookFormType) => {
 
 					<Form.Item
 						initialValue={edittingBook?.author}
+						rules={[
+							{
+								required: true,
+								message: "This field is required",
+							},
+						]}
 						name={"author"}
 						label="Author:"
 					>
@@ -228,6 +252,12 @@ const BookForm = (props: BookFormType) => {
 
 					<Form.Item
 						initialValue={edittingBook?.price}
+						rules={[
+							{
+								required: true,
+								message: "This field is required",
+							},
+						]}
 						name={"price"}
 						label="Price"
 					>
@@ -236,6 +266,12 @@ const BookForm = (props: BookFormType) => {
 
 					<Form.Item
 						initialValue={edittingBook?.publishedYear}
+						rules={[
+							{
+								required: true,
+								message: "This field is required",
+							},
+						]}
 						name={"publishedYear"}
 						label="Publish year:"
 					>

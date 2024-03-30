@@ -202,6 +202,12 @@ const StaffForm = (props: StaffFormProps) => {
 							name={"name"}
 							initialValue={edittingStaff?.userName}
 							label="Username:"
+							rules={[
+								{
+									required: true,
+									message: "This field is required",
+								},
+							]}
 						>
 							<Input />
 						</Form.Item>
@@ -212,11 +218,11 @@ const StaffForm = (props: StaffFormProps) => {
 							rules={[
 								{
 									required: true,
-									message: "Trường này không được trống",
+									message: "This field is required",
 								},
 								{
 									pattern: emailRegex,
-									message: "Vui lòng điền một email hợp lệ",
+									message: "Not a valid email",
 								},
 							]}
 						>
@@ -227,6 +233,12 @@ const StaffForm = (props: StaffFormProps) => {
 							initialValue={edittingStaff?.roleId}
 							name={"roleId"}
 							label="Role:"
+							rules={[
+								{
+									required: true,
+									message: "This field is required",
+								},
+							]}
 						>
 							<Select>
 								{!roleLoading &&
@@ -254,6 +266,12 @@ const StaffForm = (props: StaffFormProps) => {
 							name={"phone"}
 							initialValue={edittingStaff?.phone}
 							label="Phone Number:"
+							rules={[
+								{
+									required: true,
+									message: "This field is required",
+								},
+							]}
 						>
 							<Input />
 						</Form.Item>
@@ -262,6 +280,12 @@ const StaffForm = (props: StaffFormProps) => {
 							name={"gender"}
 							initialValue={edittingStaff?.gender}
 							label="Gender"
+							rules={[
+								{
+									required: true,
+									message: "This field is required",
+								},
+							]}
 						>
 							<Radio.Group>
 								<Radio value={true}> Male </Radio>
@@ -275,6 +299,12 @@ const StaffForm = (props: StaffFormProps) => {
 							name={"address"}
 							initialValue={edittingStaff?.address}
 							label="Address:"
+							rules={[
+								{
+									required: true,
+									message: "This field is required",
+								},
+							]}
 						>
 							<TextArea rows={2} />
 						</Form.Item>

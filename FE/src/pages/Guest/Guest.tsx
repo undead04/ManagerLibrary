@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Alert, Button, Input, Modal, Spin, Table } from "antd";
 import type { TableColumnsType } from "antd";
-import { Link } from "react-router-dom";
 import {
 	DeleteOutlined,
 	EditOutlined,
-	EyeOutlined,
 	PlusCircleOutlined,
 } from "@ant-design/icons";
 
@@ -106,20 +104,44 @@ const Guest = () => {
 		{
 			title: "Username",
 			dataIndex: "name",
+			sorter: (a, b) => a.name.localeCompare(b.name),
 		},
 		{
 			title: "Phone",
 			dataIndex: "phone",
+			sorter: (a, b) => a.phone.localeCompare(b.phone),
+			filters: guests.map((s) => ({
+				value: s.phone,
+				text: s.phone,
+			})),
+			filterSearch: true,
+			onFilter: (value: boolean | React.Key, record) => {
+				return record.phone === value;
+			},
 		},
 
 		{
 			title: "Gender",
 			dataIndex: "gender",
 			render: (gender: boolean) => (gender ? "Male" : "Female"),
+			filters: [
+				{
+					text: "Male",
+					value: true,
+				},
+				{
+					text: "Female",
+					value: false,
+				},
+			],
+			onFilter: (value: boolean | React.Key, record) => {
+				return record.gender === value;
+			},
 		},
 		{
 			title: "Address",
 			dataIndex: "address",
+			sorter: (a, b) => a.address.localeCompare(b.address),
 		},
 		{
 			title: "",
@@ -128,14 +150,6 @@ const Guest = () => {
 			render: (id: string) => {
 				return (
 					<div className="flex gap-2 items-center justify-center">
-						<Button className="p-0 aspect-square flex items-center justify-center">
-							<Link
-								className="text-blue-500 underline"
-								to={`/guest/d/${id} `}
-							>
-								<EyeOutlined />
-							</Link>
-						</Button>
 						<Button
 							onClick={() => handleStartEdit(id)}
 							className="text-blue-500 underline p-0 aspect-square flex items-center justify-center"
@@ -219,7 +233,7 @@ const Guest = () => {
 			<div className="mb-4">
 				<Search
 					size="large"
-					placeholder="Search for books"
+					placeholder="Search for guests, phone..."
 					onSearch={onSearch}
 					enterButton
 				/>

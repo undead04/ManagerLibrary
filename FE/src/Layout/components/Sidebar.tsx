@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import {
-	AppstoreOutlined,
+	BarChartOutlined,
 	BookOutlined,
-	DesktopOutlined,
-	GroupOutlined,
+	ContainerOutlined,
 	HomeOutlined,
-	KeyOutlined,
-	ManOutlined,
 	MenuFoldOutlined,
 	MenuOutlined,
 	MenuUnfoldOutlined,
 	PlusCircleOutlined,
+	TagOutlined,
+	UserOutlined,
+	UsergroupAddOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Button, Menu, theme } from "antd";
@@ -45,25 +45,25 @@ const items: MenuItem[] = [
 		<BookOutlined />,
 	),
 	getItem(
-		<Link to={"/book/entry"}>Book Entry</Link>,
+		<Link to={"/book-entry"}>Book Entry</Link>,
 		"isImportBookRead",
 		<PlusCircleOutlined />,
 	),
 	getItem(
 		<Link to={"/staff"}>Staffs</Link>,
 		"isStaffRead",
-		<DesktopOutlined />,
+		<UsergroupAddOutlined />,
 	),
 	getItem(
-		<Link to={"/guest"}>List</Link>,
+		<Link to={"/guest"}>Guests</Link>,
 		"isMemberRead",
-		<GroupOutlined />,
+		<UserOutlined />,
 	),
 
 	getItem(
-		<Link to={"/library/coupon/add"}>Borrow Service</Link>,
+		<Link to={"/library"}>Borrowing services</Link>,
 		"isBorrowBookRead",
-		<ManOutlined />,
+		<ContainerOutlined />,
 	),
 	getItem(
 		<Link to={"/category"}>Category</Link>,
@@ -73,12 +73,12 @@ const items: MenuItem[] = [
 	getItem(
 		<Link to={"/income"}>Income</Link>,
 		"isIncomeRead",
-		<AppstoreOutlined />,
+		<BarChartOutlined />,
 	),
 	getItem(
 		<Link to={"/authorization"}>Authorization</Link>,
-		"authorization",
-		<KeyOutlined />,
+		"isRoleRead",
+		<TagOutlined />,
 	),
 ];
 

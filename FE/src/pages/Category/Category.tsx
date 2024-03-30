@@ -91,10 +91,12 @@ const Category = () => {
 		{
 			title: "Title",
 			dataIndex: "name",
+			sorter: (a, b) => a.name.localeCompare(b.name),
 		},
 		{
 			title: "Description",
 			dataIndex: "description",
+			sorter: (a, b) => a.description.localeCompare(b.description),
 		},
 		{
 			title: "",

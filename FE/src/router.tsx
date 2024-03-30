@@ -1,14 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
 import GuestLayout from "./Layout/GuestLayout";
 import Login from "./pages/Auth/Login";
-import Register from "./pages/Auth/Register";
 import UserLayout from "./Layout/UserLayout";
 import Home from "./pages/Home/Home";
 import Book from "./pages/Book/Book";
 import BookDetail from "./pages/Book/BookDetail";
 import Staff from "./pages/Staff/Staff";
 import StaffDetail from "./pages/Staff/StaffDetail";
-import StaffForm from "./pages/Staff/StaffForm";
 import Guest from "./pages/Guest/Guest";
 import GuessDetail from "./pages/Guest/GuestDetail";
 import Library from "./pages/Library/Library";
@@ -17,7 +15,9 @@ import CouponAdd from "./pages/Library/Coupon/CouponAdd";
 import Category from "./pages/Category/Category";
 import Income from "./pages/Income/Income";
 import Authorization from "./pages/Authorization/Authorization";
-import BookEntryForm from "./pages/Book/BookEntryForm";
+import BookEntry from "./pages/BookEntry/BookEntry";
+import NetWorkError from "./pages/ErrorPage/NetWorkError";
+import PageNotFound from "./pages/ErrorPage/PageNotFound";
 
 const router = createBrowserRouter([
 	{
@@ -27,10 +27,6 @@ const router = createBrowserRouter([
 			{
 				path: "/login",
 				element: <Login />,
-			},
-			{
-				path: "/register",
-				element: <Register />,
 			},
 		],
 	},
@@ -51,8 +47,8 @@ const router = createBrowserRouter([
 				element: <Book />,
 			},
 			{
-				path: "/book/entry",
-				element: <BookEntryForm />,
+				path: "/book-entry",
+				element: <BookEntry />,
 			},
 			{
 				path: "/book/d/:id",
@@ -67,14 +63,7 @@ const router = createBrowserRouter([
 				path: "/staff/d/:id",
 				element: <StaffDetail />,
 			},
-			{
-				path: "/staff/e/:id",
-				element: <StaffForm />,
-			},
-			{
-				path: "/staff/add",
-				element: <StaffForm />,
-			},
+
 			{
 				path: "/guest",
 				element: <Guest />,
@@ -89,7 +78,7 @@ const router = createBrowserRouter([
 				element: <Library />,
 			},
 			{
-				path: "/library/coupon/d/:id",
+				path: "/library/coupon/:id/memberId/:mbId",
 				element: <CouponDetail />,
 			},
 			{
@@ -100,6 +89,7 @@ const router = createBrowserRouter([
 				path: "/library/coupon/add",
 				element: <CouponAdd />,
 			},
+
 			{
 				path: "/category",
 				element: <Category />,
@@ -113,6 +103,18 @@ const router = createBrowserRouter([
 				element: <Authorization />,
 			},
 		],
+	},
+	{
+		path: "/network-error",
+		element: <NetWorkError />,
+	},
+	{
+		path: "/page-not-found",
+		element: <PageNotFound />,
+	},
+	{
+		path: "*",
+		element: <PageNotFound />,
 	},
 ]);
 

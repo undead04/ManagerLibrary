@@ -10,6 +10,7 @@ import {
 	updateRole,
 } from "../../context/Role/role.slice";
 import { toast } from "react-toastify";
+import { IClaim } from "../../type";
 
 const AuthorizationForm = () => {
 	const dispatch = useAppDispatch();
@@ -75,6 +76,15 @@ const AuthorizationForm = () => {
 			],
 			key: "staffs",
 		},
+		{
+			name: "Authorization",
+			options: [
+				{ name: "Read", key: "isRoleRead" },
+				{ name: "Create & Update", key: "isRoleEditAndCreate" },
+				{ name: "Delete", key: "isRoleDelete" },
+			],
+			key: "staffs",
+		},
 	];
 	const handleSubmit = () => {
 		console.log("ruleList", ruleList);
@@ -128,12 +138,14 @@ const AuthorizationForm = () => {
 					}
 
 					if (res && res.claims) {
+						console.log(res.claims);
+
 						setRuleList(res.claims);
 					}
 				});
 		}
 	}, [edittingRole?.id, dispatch]);
-	const initialRuleList = {
+	const initialRuleList: IClaim = {
 		isBookRead: false,
 		isBookEditAndCreate: false,
 		isBookDelete: false,
@@ -151,6 +163,9 @@ const AuthorizationForm = () => {
 		isImportBookRead: false,
 		isImportBookCreate: false,
 		isIncomeRead: false,
+		isRoleDelete: false,
+		isRoleRead: false,
+		isRoleEditAndCreate: false,
 	};
 	const [roleName, setRoleName] = useState("");
 	const [ruleList, setRuleList] = useState(initialRuleList);
@@ -177,6 +192,7 @@ const AuthorizationForm = () => {
 
 				<Button
 					type="default"
+					disabled={!edittingRole?.id}
 					onClick={handleCancelEdit}
 					size="large"
 				>

@@ -22,5 +22,8 @@ interface IClaim {
 	isImportBookRead: boolean;
 	isImportBookCreate: boolean;
 	isIncomeRead: boolean;
+	isRoleRead: boolean;
+	isRoleEditAndCreate: boolean;
+	isRoleDelete: boolean;
 }
 export type { IRole, IClaim };

@@ -2,26 +2,24 @@ import {
 	EyeOutlined,
 	LineOutlined,
 	PlusOutlined,
-	SwapOutlined,
 } from "@ant-design/icons";
 import {
 	Button,
-	Descriptions,
-	Image,
 	Input,
 	InputNumber,
 	Table,
 	TableColumnsType,
 } from "antd";
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { RootState, useAppDispatch } from "../../context/store";
 import { useSelector } from "react-redux";
 import { IBook } from "../../type/book.type";
 import { getBook, getBooks } from "../../context/Book/book.slice";
-import IGuest from "../../type/guest.type";
 import { getGuests } from "../../context/Guest/guest.slice";
 import { SearchProps } from "antd/es/input";
+import { IBookEntryPost } from "../../type";
+import { addBookEntry } from "../../context/BookEntry/bookEntry.slice";
 
 const { Search } = Input;
 
@@ -33,22 +31,12 @@ interface IBookExtend extends IBook {
 interface IBookEntry extends IBook {
 	key: React.Key;
 	index: number;
-	quantity: number;
-}
-
-interface GuestExtend extends IGuest {
-	key: React.Key;
-	index: number;
 }
 
 const BookEntryForm = () => {
 	const dispatch = useAppDispatch();
 	const books = useSelector(
 		(state: RootState) => state.book.booksDetail,
-	);
-
-	const guests = useSelector(
-		(state: RootState) => state.guest.guests,
 	);
 
 	const isLoading = useSelector(
@@ -270,87 +258,28 @@ const BookEntryForm = () => {
 				...e,
 				key: e.id,
 				index,
-				quantity: 1,
 			};
 		},
 	);
 
-	// Selected guest state (only 1)
-	const [selectedGuest, setSelectedGuest] = useState<GuestExtend>();
-
-	const filterGuestData: GuestExtend[] = guests.map((g, index) => {
-		return {
-			...g,
-			key: g.id,
-			index: index + 1,
+	const onFinish = () => {
+		const submitData: IBookEntryPost = {
+			importBookDetails: filterEntryBooks.map((f) => ({
+				bookId: f.id,
+				price: f.price.toString(),
+				quantity: f.quantity,
+			})),
 		};
-	});
 
-	const guestColumns: TableColumnsType<GuestExtend> = [
-		{
-			title: "Username",
-			dataIndex: "name",
-		},
-		{
-			title: "Phone",
-			dataIndex: "phone",
-		},
-
-		{
-			title: "Gender",
-			dataIndex: "gender",
-			render: (gender: boolean) => (gender ? "Male" : "Female"),
-		},
-		{
-			title: "Address",
-			dataIndex: "address",
-		},
-		{
-			title: "",
-			dataIndex: "id",
-			align: "end",
-			render: (id: string, item) => {
-				return (
-					<div className="flex gap-2 items-center justify-center">
-						<Button className="p-0 aspect-square flex items-center justify-center">
-							<Link
-								className="text-blue-500 underline"
-								to={`/guest/d/${id} `}
-							>
-								<EyeOutlined />
-							</Link>
-						</Button>
-						{item.id !== selectedGuest?.id ? (
-							<Button
-								onClick={() => setSelectedGuest(item)}
-								className="text-blue-500 underline p-0 aspect-square flex items-center justify-center"
-							>
-								{selectedGuest?.id ? (
-									<>
-										<SwapOutlined />
-									</>
-								) : (
-									<>
-										<PlusOutlined />
-									</>
-								)}
-							</Button>
-						) : (
-							<></>
-						)}
-					</div>
-				);
-			},
-			key: "id",
-			fixed: "right",
-		},
-	];
-
-	const onSearchGuest: SearchProps["onSearch"] = (value) => {
-		dispatch(getGuests({ q: value }));
+		if (submitData) {
+			dispatch(addBookEntry(submitData))
+				.unwrap()
+				.then(() => {
+					setEntryBooks([]);
+				})
+				.catch((err) => console.log(err));
+		}
 	};
-
-	const onFinish = () => {};
 	return (
 		<div>
 			<div className="text-3xl font-semibold my-2 bg-blue-500 py-4 text-white text-center">
@@ -358,67 +287,6 @@ const BookEntryForm = () => {
 			</div>
 
 			<div className="mt-8 space-y-10">
-				<div className="grid grid-cols-2 gap-8">
-					{!isLoading && (
-						<div className="space-y-4 shadow-md p-4">
-							<div className="text-xl font-semibold">
-								Choose a guest
-							</div>
-
-							<Search
-								size="large"
-								placeholder="Search for guests"
-								onSearch={onSearchGuest}
-								enterButton
-							/>
-							<Table
-								columns={guestColumns}
-								dataSource={filterGuestData}
-								pagination={{
-									showTotal: (t) => <div>Totals: {t}</div>,
-									total: filterGuestData.length,
-									defaultPageSize: 4,
-									pageSizeOptions: [4, 10, 20, 30, 50, 100],
-									showSizeChanger: true,
-								}}
-							/>
-						</div>
-					)}
-
-					<div className="shadow-md p-4">
-						{selectedGuest?.id && (
-							<Descriptions title="Selected Guest: ">
-								<Descriptions.Item label="Name">
-									{selectedGuest?.name}
-								</Descriptions.Item>
-								<Descriptions.Item label="Telephone">
-									{selectedGuest?.phone}
-								</Descriptions.Item>
-								<Descriptions.Item label="Address">
-									{selectedGuest?.address}
-								</Descriptions.Item>
-
-								<Descriptions.Item label="Avatar">
-									<Image
-										style={{ width: "80px" }}
-										className="aspect-square object-contain"
-										src={selectedGuest?.urlImage}
-									/>
-								</Descriptions.Item>
-
-								<Descriptions.Item label="Gender">
-									{selectedGuest?.gender ? "Male" : "Female"}
-								</Descriptions.Item>
-							</Descriptions>
-						)}
-
-						{!selectedGuest?.id && (
-							<div className="text-3xl font-semibold text-center text-wrap mt-10">
-								Please select a guest to <br /> start book entry
-							</div>
-						)}
-					</div>
-				</div>
 				<div className="grid grid-cols-2 gap-8">
 					<div>
 						{!isLoading && (
@@ -451,7 +319,7 @@ const BookEntryForm = () => {
 						{!isLoading && (
 							<div className="space-y-4 shadow-md p-4">
 								<div className="text-xl font-semibold">
-									Select books to entry
+									Choosed books
 								</div>
 								<Table
 									size="large"
@@ -472,13 +340,21 @@ const BookEntryForm = () => {
 				</div>
 
 				<div className="space-x-4 w-fit ml-auto">
-					<Button size="large" type="primary" onClick={onFinish}>
+					<Button
+						disabled={filterEntryBooks.length === 0}
+						size="large"
+						type="primary"
+						onClick={onFinish}
+					>
 						Save
 					</Button>
 					<Button
 						size="large"
 						type="primary"
-						onClick={() => console.log(filterEntryBooks)}
+						disabled={entryBooks.length === 0}
+						onClick={() => {
+							setEntryBooks([]);
+						}}
 					>
 						Clear
 					</Button>

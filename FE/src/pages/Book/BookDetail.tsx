@@ -1,63 +1,59 @@
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Descriptions, Image } from "antd";
-import React from "react";
+import { Descriptions, Image } from "antd";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import bookService from "../../services/bookService";
+import { IBook } from "../../type/book.type";
+import { formatCurrency } from "../../utils/formatCurrency";
 
 const BookDetail = () => {
+	const { id } = useParams();
+	const [currentBook, setCurrentBook] = useState<IBook | null>(null);
+
+	useEffect(() => {
+		const loadData = async () => {
+			try {
+				if (id) {
+					const data = await bookService.read({ id });
+
+					setCurrentBook(data.data as IBook);
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		};
+
+		loadData();
+	}, [id]);
 	return (
 		<div>
-			<div className="ml-auto w-fit flex items-center gap-2">
-				<Button
-					type="primary"
-					icon={<EditOutlined />}
-					size={"middle"}
-				>
-					Edit
-				</Button>
-				<Button
-					type="primary"
-					danger
-					icon={<DeleteOutlined />}
-					size={"middle"}
-				>
-					Delete
-				</Button>
-			</div>
 			<div>
 				<Descriptions title="Book Info">
 					<Descriptions.Item label="Image">
-						<Image.PreviewGroup
-							items={[
-								"https://images.unsplash.com/photo-1592496431122-2349e0fbc666?q=80&w=2112&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-								"https://images.unsplash.com/photo-1585785673770-f16d239b825a?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-								"https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=2112&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-							]}
-						>
-							<Image
-								width={200}
-								src="https://images.unsplash.com/photo-1592496431122-2349e0fbc666?q=80&w=2112&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-							/>
+						<Image.PreviewGroup>
+							<Image width={200} src={currentBook?.urlImage} />
 						</Image.PreviewGroup>
 					</Descriptions.Item>
 					<Descriptions.Item label="Title">
-						Zhou Maomao
+						{currentBook?.title}
+					</Descriptions.Item>
+					<Descriptions.Item label="Category">
+						{currentBook?.nameCategory}
 					</Descriptions.Item>
 					<Descriptions.Item label="ISBN ID">
-						1810000000
+						{currentBook?.isbn}
 					</Descriptions.Item>
 					<Descriptions.Item label="Author">
-						Bing ChiLing
+						{currentBook?.author}
 					</Descriptions.Item>
 					<Descriptions.Item label="Publish year">
-						2001
+						{currentBook?.publishedYear}
 					</Descriptions.Item>
-					<Descriptions.Item label="Amount">100</Descriptions.Item>
-					<Descriptions.Item label="Descrition">
-						Lorem ipsum dolor sit amet consectetur adipisicing elit.
-						Incidunt nesciunt sequi voluptatibus recusandae impedit
-						cupiditate voluptatem quia excepturi asperiores porro.
+					<Descriptions.Item label="Quantity">
+						{currentBook?.presentQuantity}/{currentBook?.quantity}
 					</Descriptions.Item>
+
 					<Descriptions.Item label="Price">
-						2.000VND
+						{currentBook?.price && formatCurrency(currentBook.price)}
 					</Descriptions.Item>
 				</Descriptions>
 			</div>
