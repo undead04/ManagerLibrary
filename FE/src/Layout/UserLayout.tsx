@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "../context/store";
 import { authLogout } from "../context/Auth/auth.slice";
 import { PoweroffOutlined } from "@ant-design/icons";
+import Footer from "./components/Footer";
 
 const UserLayout = () => {
 	const navigate = useNavigate();
@@ -39,8 +40,8 @@ const UserLayout = () => {
 	return (
 		<>
 			<ToastContainer />
-			<div>
-				<Content style={{ padding: "0 48px" }}>
+			<div className="overflow-hidden">
+				<Content style={{ padding: "0 48px", minHeight: "100vh" }}>
 					<Layout
 						style={{
 							padding: "24px 0",
@@ -68,6 +69,8 @@ const UserLayout = () => {
 					</Layout>
 				</Content>
 			</div>
+
+			<Footer />
 		</>
 	);
 };

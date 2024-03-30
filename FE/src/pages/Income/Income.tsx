@@ -1,27 +1,31 @@
 import { Anchor, Col, Row } from "antd";
 import BookStatistic from "./path/BookStatistic";
+import CategoryStatistic from "./path/CategoryStatistic";
+import MemberStatistic from "./path/MemberStatistic";
 
 const Income = () => {
 	return (
 		<Row>
-			<Col span={20}>
+			<Col span={20} className="space-y-8">
 				<div id="bookStatistic">
 					<BookStatistic />
 				</div>
 				<div
-					id="part-2"
+					id="categoryStatistic"
 					style={{
-						height: "100vh",
 						background: "rgba(0,255,0,0.02)",
 					}}
-				/>
+				>
+					<CategoryStatistic />
+				</div>
 				<div
-					id="part-3"
+					id="memberLate"
 					style={{
-						height: "100vh",
 						background: "rgba(0,0,255,0.02)",
 					}}
-				/>
+				>
+					<MemberStatistic />
+				</div>
 			</Col>
 			<Col span={4}>
 				<Anchor
@@ -29,17 +33,17 @@ const Income = () => {
 						{
 							key: "bookStatistic",
 							href: "#bookStatistic",
-							title: "Statistical: Borrow",
+							title: "Top number of books borrowed",
 						},
 						{
-							key: "part-2",
-							href: "#part-2",
-							title: "Part 2",
+							key: "categoryStatistic",
+							href: "#categoryStatistic",
+							title: "Most popular categories",
 						},
 						{
-							key: "part-3",
-							href: "#part-3",
-							title: "Part 3",
+							key: "memberLate",
+							href: "#memberLate",
+							title: "Top late member",
 						},
 					]}
 				/>

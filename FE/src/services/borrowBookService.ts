@@ -58,10 +58,18 @@ const read = ({ id }: { id: string }) => {
 		.then((res) => res.data);
 };
 
-const unpaidList = () => {
+const unpaidList = ({
+	search,
+	bookId,
+}: {
+	search?: string;
+	bookId?: string;
+}) => {
 	return api
 		.get<ResponseWrapper<IBorrowBookEntity[]>>(
-			`${api.url.borrowBook}/unpaidbook`,
+			`${api.url.borrowBook}/unpaidbook?search=${
+				search ? search : ""
+			}&bookId=${bookId ? bookId : ""}`,
 		)
 		.then((res) => res.data);
 };

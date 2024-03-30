@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
-	IBookEntryDetails,
 	IBorrowBookDetails,
 	IBorrowBookEntity,
 	IBorrowBookExport,
@@ -48,11 +47,17 @@ export const getBorrowBooks = createAsyncThunk(
 
 export const getUnpaidBooks = createAsyncThunk(
 	"unpaidBooks/get",
-	async () => {
+	async ({
+		search,
+		bookId,
+	}: {
+		search?: string;
+		bookId?: string;
+	}) => {
 		try {
 			const data =
 				(await borrowBookService
-					.unpaidList()
+					.unpaidList({ search, bookId })
 					.then((res) => res.data as IBorrowBookEntity[])) ?? [];
 			return data;
 		} catch (error) {

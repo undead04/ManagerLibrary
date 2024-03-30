@@ -2,6 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
+*::-webkit-scrollbar {
+	height: 4px;
+	width: 4px;
+}
+*::-webkit-scrollbar-track {
+	border-radius: 4px;
+	background-color: #d0c9eb;
+}
+
+*::-webkit-scrollbar-track:hover {
+	background-color: #bbbbc2;
+}
+
+*::-webkit-scrollbar-track:active {
+	background-color: #bcbcc2;
+}
+
+*::-webkit-scrollbar-thumb {
+	border-radius: 5px;
+	background-color: #000000;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+	background-color: #271883;
+}
+
+*::-webkit-scrollbar-thumb:active {
+	background-color: #3526ff;
+}
+
 .ant-btn-primary {
 	color: #fff;
 	background: #1677ff;
@@ -10,4 +40,8 @@
 
 .ant-transfer .ant-transfer-list {
 	width: 50%;
+}
+
+.text-border-white {
+	text-shadow: 4px 4px #666, -4px -4px #fff;
 }

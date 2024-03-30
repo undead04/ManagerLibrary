@@ -1,131 +1,97 @@
-import { BookOutlined, SearchOutlined } from "@ant-design/icons";
+import { AppstoreOutlined, SearchOutlined } from "@ant-design/icons";
 import {
 	Button,
 	DatePicker,
 	Form,
-	Image,
 	Input,
-	Popover,
 	Table,
 	TableColumnsType,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import statisticService from "../../../services/statisticService";
 import { useForm } from "antd/es/form/Form";
-import { ITopBookStatistic } from "../../../type/static.type";
-import BookStatisticPopover from "./BookStatisticPopover";
+import { ITopCategoryStatistic } from "../../../type/static.type";
 import getCurrentDateTimeString from "../../../utils/getCurrentDateTimeString";
 
-interface ITopBookStatisticExtend extends ITopBookStatistic {
+interface ITopCategoryStatisticExtend extends ITopCategoryStatistic {
 	key: React.Key;
 	index: number;
 }
 
 const { RangePicker } = DatePicker;
-const BookStatistic = () => {
-	const [topBookList, setTopBookList] = useState<ITopBookStatistic[]>(
-		[],
-	);
+const CategoryStatistic = () => {
+	const [topCategoryList, setTopCategoryList] = useState<
+		ITopCategoryStatistic[]
+	>([]);
 
-	const [presentQuantity, setPresentQuantity] = useState("0");
-	const [totalQuantity, setTotalQuantity] = useState("0");
 	useEffect(() => {
 		const initialStartDate = "2024-03-01T00:00:00";
 		const currentDate = getCurrentDateTimeString();
 		const loadData = async () => {
 			await statisticService
-				.listTopBook(initialStartDate, currentDate)
-				.then((res) => setTopBookList(res.data));
-
-			const data = await statisticService.getQuantity();
-
-			setPresentQuantity(data.data.quantityPresentBook);
-			setTotalQuantity(data.data.quantityBook);
+				.listTopCategory(initialStartDate, currentDate)
+				.then((res) => setTopCategoryList(res.data));
 		};
 
 		loadData();
 	}, []);
 	const [form] = useForm();
-	const filteredData: ITopBookStatisticExtend[] = topBookList.map(
-		(t, index) => {
+	const filteredData: ITopCategoryStatisticExtend[] =
+		topCategoryList.map((t, index) => {
 			return {
 				...t,
 				index: index + 1,
 				key: t.id,
 			};
-		},
-	);
+		});
 	const onFinish = async () => {
 		const { date, search } = form.getFieldsValue();
 
 		const fromDate = (date && date[0].toISOString()) || false;
 		const toDate = (date && date[1].toISOString()) || false;
 		try {
-			const data = await statisticService.listTopBook(
+			const data = await statisticService.listTopCategory(
 				fromDate,
 				toDate,
 				search,
 			);
 
-			setTopBookList(data.data);
+			setTopCategoryList(data.data);
 		} catch (error) {
 			console.log(error);
 		}
 	};
 
-	const columns: TableColumnsType<ITopBookStatisticExtend> = [
+	const columns: TableColumnsType<ITopCategoryStatisticExtend> = [
 		{
 			title: "STT",
 			dataIndex: "index",
 			align: "center",
 		},
+
 		{
-			title: "Avatar",
-			dataIndex: "urlImage",
-			align: "center",
-			render: (url: string) => {
-				return (
-					<div className="mx-auto w-fit">
-						<div className="w-12 aspect-video">
-							<Image src={url} alt="url" />
-						</div>
-					</div>
-				);
-			},
+			title: "Name",
+			dataIndex: "name",
+			sorter: (a, b) => a.name.localeCompare(b.name),
 		},
 		{
-			title: "Title",
-			dataIndex: "title",
-			sorter: (a, b) => a.title.localeCompare(b.title),
+			title: "Description",
+			dataIndex: "description",
+			sorter: (a, b) => a.description.localeCompare(b.description),
 		},
 		{
-			title: "Borrow times",
+			title: "Borrow Count",
 			dataIndex: "borrowCount",
-			render: (count: string, item) => {
-				return (
-					<Popover
-						placement="top"
-						title={"List of member borrowed"}
-						content={() => <BookStatisticPopover id={item.id} />}
-					>
-						<div className="w-full cursor-pointer">{count}</div>
-					</Popover>
-				);
-			},
+			sorter: (a, b) =>
+				parseInt(a.borrowCount) - parseInt(b.borrowCount),
 		},
 	];
 
 	return (
 		<div className="shadow-lg rounded-lg min-h-[300px]">
 			<div className="text-5xl font-semibold flex gap-2 bg-blue-500 px-5 py-4 text-white">
-				<BookOutlined />
-				<span>Top number of books borrowed</span>
-			</div>
-			<div className="flex gap-2 items-center justify-center mt-4 text-3xl">
-				<div>Quantity:</div>
-				<div>
-					{presentQuantity}/{totalQuantity}
-				</div>
+				<AppstoreOutlined />
+				<span>Most popular categories</span>
 			</div>
 
 			<div className="flex justify-center py-4 mt-4">
@@ -139,7 +105,10 @@ const BookStatistic = () => {
 							<RangePicker size="large" showTime />
 						</Form.Item>
 						<Form.Item name={"search"}>
-							<Input size="large" placeholder="Search for books..." />
+							<Input
+								size="large"
+								placeholder="Search for categories..."
+							/>
 						</Form.Item>
 						<Button
 							size="large"
@@ -170,4 +139,4 @@ const BookStatistic = () => {
 	);
 };
 
-export default BookStatistic;
+export default CategoryStatistic;

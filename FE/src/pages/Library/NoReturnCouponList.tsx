@@ -38,11 +38,11 @@ const NoReturnCouponList = () => {
 	);
 
 	const reload = () => {
-		dispatch(getUnpaidBooks());
+		dispatch(getUnpaidBooks({}));
 	};
 
 	useEffect(() => {
-		dispatch(getUnpaidBooks());
+		dispatch(getUnpaidBooks({}));
 	}, [dispatch]);
 
 	const columns: TableColumnsType<BorrowBookExtend> = [
@@ -102,8 +102,7 @@ const NoReturnCouponList = () => {
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const onSearch: SearchProps["onSearch"] = (value, _e, info) => {
-		// dispatch(getUnpaidBooks({ q: value }));
-		// console.log(info?.source, value);
+		dispatch(getUnpaidBooks({ search: value }));
 	};
 
 	return (
@@ -128,7 +127,7 @@ const NoReturnCouponList = () => {
 			<div className="mb-4">
 				<Search
 					size="large"
-					placeholder="Search for books"
+					placeholder="Search for guests..."
 					onSearch={onSearch}
 					enterButton
 				/>
