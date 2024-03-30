@@ -4,6 +4,7 @@ using ManagerLibrary.Model;
 using ManagerLibrary.Model.DTO;
 using ManagerLibrary.Models;
 using ManagerLibrary.Services.ReadJWTService;
+using ManagerLibrary.Services.UpLoadService;
 using Microsoft.EntityFrameworkCore;
 using System.Formats.Asn1;
 
@@ -13,11 +14,13 @@ namespace ManagerLibrary.Repository.BookTransactionReponsitory
     {
         private readonly MyDb context;
         private readonly IReadJWTService readJWTService;
+        private readonly IUploadService uploadService;
 
-        public BookTransactionReponsitory(MyDb context,IReadJWTService readJWTService) 
+        public BookTransactionReponsitory(MyDb context,IReadJWTService readJWTService,IUploadService uploadService) 
         {
             this.context = context;
             this.readJWTService=readJWTService;
+            this.uploadService = uploadService;
         }
         public async Task CreateBookTranstion(BookTranstionModel model)
         {
@@ -89,6 +92,7 @@ namespace ManagerLibrary.Repository.BookTransactionReponsitory
                 .ToListAsync();
             return bookTranstionDetail.Select(x => new DTOBookTranstionDetail
             {
+                UrlImage=uploadService.GetUrlImage("Book",x.Book!.Image),
                 Id = x.Id,
                 BookId=x.BookId,
                 Quantity=x.Quantity,
@@ -104,7 +108,7 @@ namespace ManagerLibrary.Repository.BookTransactionReponsitory
 
        
 
-        public async Task<List<DTOBookTranstion>> GetAllUnpaidBook()
+        public async Task<List<DTOBookTranstion>> GetAllUnpaidBook(string?search,int? bookId)
         {
              var bookTranstion = await context.bookTransactions.Include(f => f.members)
                  .Include(f => f.User)
@@ -112,6 +116,14 @@ namespace ManagerLibrary.Repository.BookTransactionReponsitory
                  .Where(bo=>bo.BallotType=="X")
                  .Where(bo => bo.bookTransactionDetails!.Any(bo => bo.ReturnDate.Date == DateTime.MinValue.Date))
                  .ToListAsync();
+            if (!string.IsNullOrEmpty(search))
+            {
+                bookTranstion = bookTranstion.Where(bo => bo.members!.Name.Contains(search) || bo.members.Phone.Contains(search)).ToList();
+            }
+            if (bookId.HasValue)
+            {
+                bookTranstion = bookTranstion.Where(bo => bo.bookTransactionDetails!.Any(bo => bo.BookId == bookId)).ToList();
+            }
             return bookTranstion.Select(x => new DTOBookTranstion
             {
                 StaffId = x.UserId,

@@ -62,6 +62,7 @@ namespace ManagerLibrary.Validation
         private bool IsReturnBook(int memberid)
         {
             var booktranstion = context.bookTransactions.Where(bo => bo.MembersId == memberid)
+                .Where(bo=>bo.BallotType=="X")
                 .Where(bo => bo.bookTransactionDetails!.Any(bo => bo.ReturnDate == DateTime.MinValue)).ToList();
             if (booktranstion.Count>0)
             {

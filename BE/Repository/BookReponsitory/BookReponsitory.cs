@@ -124,7 +124,7 @@ namespace ManagerLibrary.Repository.BookReponsitory
                 .AsQueryable();
             if(!String.IsNullOrEmpty(search))
             {
-                book=book.Where(bo=>bo.Title.Contains(search)||bo.Author.Contains(search));
+                book=book.Where(bo=>bo.Title.Contains(search)||bo.Author.Contains(search)||bo.ISBN.Contains(search));
             } 
             if(categoryId.HasValue)
             {

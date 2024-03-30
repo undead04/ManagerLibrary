@@ -94,15 +94,15 @@ namespace ManagerLibrary.Repository.RoleRepository
                 }
                 if (model.claims!.IsRoleRead)
                 {
-                    await claimsSerivce.CreateClaims(role, "role", "view");
+                    await claimsSerivce.CreateClaims(role, "roless", "view");
                 }
                 if (model.claims!.IsRoleEditAndCreate)
                 {
-                    await claimsSerivce.CreateClaims(role, "role", "editcreate");
+                    await claimsSerivce.CreateClaims(role, "roless", "editcreate");
                 }
                 if (model.claims!.IsBookDelete)
                 {
-                    await claimsSerivce.CreateClaims(role, "role", "delete");
+                    await claimsSerivce.CreateClaims(role, "roless", "delete");
                 }
             }
 
@@ -209,15 +209,15 @@ namespace ManagerLibrary.Repository.RoleRepository
                 }
                 if (model.claims!.IsRoleRead)
                 {
-                    await claimsSerivce.CreateClaims(role, "role", "view");
+                    await claimsSerivce.CreateClaims(role, "roless", "view");
                 }
                 if (model.claims!.IsRoleEditAndCreate)
                 {
-                    await claimsSerivce.CreateClaims(role, "role", "editcreate");
+                    await claimsSerivce.CreateClaims(role, "roless", "editcreate");
                 }
                 if (model.claims!.IsBookDelete)
                 {
-                    await claimsSerivce.CreateClaims(role, "role", "delete");
+                    await claimsSerivce.CreateClaims(role, "roless", "delete");
                 }
 
                 await roleManager.UpdateAsync(role);
@@ -255,9 +255,9 @@ namespace ManagerLibrary.Repository.RoleRepository
                     IsIncomeRead=existingClaims.Any(ex=>ex.Type=="income"&&ex.Value=="view"),
                     IsImportBookRead=existingClaims.Any(ex=>ex.Type=="import"&&ex.Value=="view"),
                     IsImportBookCreate = existingClaims.Any(ex => ex.Type == "import" && ex.Value == "editcreate"),
-                    IsRoleRead= existingClaims.Any(ex => ex.Type == "role" && ex.Value == "view"),
-                    IsRoleDelete= existingClaims.Any(ex => ex.Type == "role" && ex.Value == "delete"),
-                    IsRoleEditAndCreate= existingClaims.Any(ex => ex.Type == "role" && ex.Value == "editcreate"),
+                    IsRoleRead= existingClaims.Any(ex => ex.Type == "roless" && ex.Value == "view"),
+                    IsRoleDelete= existingClaims.Any(ex => ex.Type == "roless" && ex.Value == "delete"),
+                    IsRoleEditAndCreate= existingClaims.Any(ex => ex.Type == "roless" && ex.Value == "editcreate"),
 
                 }
                 

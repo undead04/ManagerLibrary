@@ -39,7 +39,7 @@ namespace ManagerLibrary.Services.AccountService
             if(role!= null)
             {
                 var roleObject = await roleManager.FindByNameAsync(role);
-                authClaims.Add(new Claim(ClaimTypes.Role, role.ToString()));
+                
                 if(roleObject!=null)
                 {
                     var claimsUser = await roleManager.GetClaimsAsync(roleObject);
@@ -103,9 +103,9 @@ namespace ManagerLibrary.Services.AccountService
                     IsIncomeRead=roleClaims.Any(ex=>ex.Type=="income"&&ex.Value=="view"),
                     IsImportBookRead=roleClaims.Any(ex=>ex.Type=="import"&&ex.Value=="view"),
                     IsImportBookCreate = roleClaims.Any(ex => ex.Type == "import" && ex.Value == "editcreate"),
-                    IsRoleRead = roleClaims.Any(ex => ex.Type == "role" && ex.Value == "view"),
-                    IsRoleDelete = roleClaims.Any(ex => ex.Type == "role" && ex.Value == "delete"),
-                    IsRoleEditAndCreate = roleClaims.Any(ex => ex.Type == "role" && ex.Value == "editcreate"),
+                    IsRoleRead = roleClaims.Any(ex => ex.Type == "roless" && ex.Value == "view"),
+                    IsRoleDelete = roleClaims.Any(ex => ex.Type == "roless" && ex.Value == "delete"),
+                    IsRoleEditAndCreate = roleClaims.Any(ex => ex.Type == "roless" && ex.Value == "editcreate"),
 
                 }
             };

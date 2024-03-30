@@ -25,11 +25,11 @@ namespace ManagerLibrary.Controllers
         }
         [HttpGet("topbook")]
         [Authorize(Policy = "IncomeView")]
-        public async Task<IActionResult> TopBorrow(DateTime from,DateTime to)
+        public async Task<IActionResult> TopBorrow(DateTime? from,DateTime? to, string? search)
         {
             try
             {
-                var book=await statisticalServer.TopBook(from, to);
+                var book=await statisticalServer.TopBook(from, to,search);
                 return Ok(Repository<List<DTOTopBook>>.WithData(book,200));
             }
             catch
@@ -56,18 +56,18 @@ namespace ManagerLibrary.Controllers
                 return BadRequest();
             }
         }
-        [HttpGet("book/{bokId}")]
+        [HttpGet("book/{bookId}")]
         [Authorize(Policy = "IncomeView")]
-        public async Task<IActionResult> BookStatistis(int bokId)
+        public async Task<IActionResult> BookStatistis(int bookId)
         {
             try
             {
-                var book = await bookRepository.getBook(bokId);
+                var book = await bookRepository.getBook(bookId);
                 if(book==null)
                 {
                     return NotFound();
                 }
-                var member = await statisticalServer.BookStatistis(bokId);
+                var member = await statisticalServer.BookStatistis(bookId);
                 return Ok(Repository<BookStatisticsDTO>.WithData(member, 200));
             }
             catch
@@ -84,6 +84,51 @@ namespace ManagerLibrary.Controllers
                 
                 var statis = await statisticalServer.Statistical();
                 return Ok(Repository<StatisticalModel>.WithData(statis, 200));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet("topCategory")]
+        [Authorize(Policy = "IncomeView")]
+        public async Task<IActionResult> TopCategory(DateTime?from,DateTime?to, string? search)
+        {
+            try
+            {
+
+                var statis = await statisticalServer.TopCategory(from,to, search);
+                return Ok(Repository<List<TopCategoryDTO>>.WithData(statis, 200));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet("topMemberLate")]
+        [Authorize(Policy = "IncomeView")]
+        public async Task<IActionResult> TopMemberLate(DateTime? from, DateTime? to,string?search)
+        {
+            try
+            {
+
+                var statis = await statisticalServer.TopLateMember(from, to,search);
+                return Ok(Repository<List<TopMembeDemurragerDTO>>.WithData(statis, 200));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet("topMemberLateDetail/{memberId}")]
+        [Authorize(Policy = "IncomeView")]
+        public async Task<IActionResult> TopMemberLateDetail(int memberId)
+        {
+            try
+            {
+
+                var statis = await statisticalServer.DetailLate(memberId);
+                return Ok(Repository<TopMembeDemurragerDetailDTO>.WithData(statis, 200));
             }
             catch
             {

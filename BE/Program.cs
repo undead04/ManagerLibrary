@@ -121,9 +121,9 @@ var policyConfigurations = new List<PolicyConfiguration>
             new PolicyConfiguration { PolicyName = "ImportView", ClaimType = "import", ClaimValue = "view" },
             new PolicyConfiguration { PolicyName = "ImportEditCreate", ClaimType = "import", ClaimValue = "editcreate" },
             new PolicyConfiguration { PolicyName = "IncomeView", ClaimType = "income", ClaimValue = "view" },
-            new PolicyConfiguration { PolicyName = "RoleView", ClaimType = "role", ClaimValue = "view" },
-            new PolicyConfiguration { PolicyName = "RoleEditCreate", ClaimType = "role", ClaimValue = "editcreate" },
-            new PolicyConfiguration { PolicyName = "RoleDelete", ClaimType = "role", ClaimValue = "delete" },
+            new PolicyConfiguration { PolicyName = "RoleView", ClaimType = "roless", ClaimValue = "view" },
+            new PolicyConfiguration { PolicyName = "RoleEditCreate", ClaimType = "roless", ClaimValue = "editcreate" },
+            new PolicyConfiguration { PolicyName = "RoleDelete", ClaimType = "roless", ClaimValue = "delete" },
            
 
             // Add more policy configurations as needed

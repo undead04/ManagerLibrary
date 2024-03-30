@@ -115,11 +115,11 @@ namespace ManagerLibrary.Controllers
         }
         [HttpGet("UnpaidBook")]
         [Authorize(Policy = "BorrowView")]
-        public async Task<IActionResult> GetAllUnaidbook()
+        public async Task<IActionResult> GetAllUnaidbook(string?search,int? bookId)
         {
             try
             {
-                var order = await bookTransactionRepository.GetAllUnpaidBook();
+                var order = await bookTransactionRepository.GetAllUnpaidBook(search,bookId);
                 return Ok(Repository<List<DTOBookTranstion>>.WithData(order, 200));
             }
             catch

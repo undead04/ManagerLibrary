@@ -3,6 +3,8 @@
     public class StatisticalModel
     {
         public int QuantityBook { get; set; }
-        public int QunatityPresentBook { get; set; }
+        public int QuantityPresentBook { get; set; }
+        public int QuantityMember { get;set; }
+        
     }
 }

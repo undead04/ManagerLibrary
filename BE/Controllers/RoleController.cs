@@ -25,7 +25,7 @@ namespace ManagerLibrary.Controllers
             this.staffRepository = staffReposnitory;
         }
         [HttpPost]
-        
+        [Authorize(Policy ="RoleEditCreate")]
         public async Task<IActionResult> CreateRole(RoleModel model)
         {
             try
@@ -74,6 +74,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpPut("{Id}")]
+        [Authorize(Policy = "RoleEditCreate")]
         public async Task<IActionResult> UpdateRole(string Id,RoleModel model)
         {
             try
@@ -127,6 +128,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpDelete("{Id}")]
+        [Authorize(Policy = "RoleDelete")]
         public async Task<IActionResult> DeleteRole(string Id)
         {
             try
@@ -150,6 +152,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpGet("{Id}")]
+        [Authorize(Policy ="RoleView")]
         public async Task<IActionResult> GetRole(string Id)
         {
             try
@@ -168,6 +171,7 @@ namespace ManagerLibrary.Controllers
             }
         }
         [HttpGet]
+        [Authorize(Policy = "RoleView")]
         public async Task<IActionResult> GetAllRole()
         {
             try
