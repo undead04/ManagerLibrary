@@ -96,8 +96,11 @@ const Book = () => {
 	const handleDelete = (id: string) => {
 		dispatch(removeBook({ id }))
 			.unwrap()
-			.then((res) => {
-				console.log(res);
+			.then(() => {
+				dispatch(getBooks({}));
+			})
+			.catch((err) => {
+				console.log(err);
 			});
 		setOpenDelete(false);
 	};

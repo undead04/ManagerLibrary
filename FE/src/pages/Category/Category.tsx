@@ -69,7 +69,11 @@ const Category = () => {
 	const [deleteId, setDeleteId] = useState<string>();
 	const [openDelete, setOpenDelete] = useState(false);
 	const handleDelete = (id: string) => {
-		dispatch(removeCategory({ id }));
+		dispatch(removeCategory({ id }))
+			.unwrap()
+			.then(() => {
+				dispatch(getCategorys({}));
+			});
 		setOpenDelete(false);
 	};
 

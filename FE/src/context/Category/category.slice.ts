@@ -112,12 +112,35 @@ export const updateCategory = createAsyncThunk(
 export const removeCategory = createAsyncThunk(
 	"category/remove",
 	async ({ id }: { id: string }) => {
-		try {
-			categoryService.remove({ id });
-			return id;
-		} catch (error) {
-			console.log(error);
-		}
+		await categoryService
+			.remove({ id })
+			.then(() => {
+				toast.success(`Delete successfully`, {
+					position: "top-right",
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+					theme: "light",
+					transition: Bounce,
+				});
+				return id;
+			})
+			.catch((err) => {
+				toast.error(`${err.message}`, {
+					position: "top-right",
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+					theme: "light",
+					transition: Bounce,
+				});
+			});
 	},
 );
 
@@ -164,15 +187,6 @@ export const categorySlice = createSlice({
 			.addCase(addCategory.fulfilled, (state) => {
 				state.edittingCategory = null;
 				state.isLoading = false;
-			})
-
-			.addCase(removeCategory.fulfilled, (state, action) => {
-				if (action.payload) {
-					const filterData = state.categorys.filter(
-						(c) => c.categoryId !== action.payload,
-					);
-					state.categorys = filterData;
-				}
 			}),
 });
 

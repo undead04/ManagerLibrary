@@ -60,7 +60,10 @@ const edit = ({ id, data }: { id: string; data: FormData }) => {
 const remove = ({ id }: { id: string }) => {
 	return api
 		.delete<ResponseWrapper<string>>(`${api.url.staff}/${id}`)
-		.then((res) => res.data);
+		.then((res) => res.data)
+		.catch((err) => {
+			throw err.response.data;
+		});
 };
 
 const staffService = {

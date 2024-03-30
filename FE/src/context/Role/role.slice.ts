@@ -133,16 +133,27 @@ export const updateRole = createAsyncThunk(
 export const removeRole = createAsyncThunk(
 	"role/remove",
 	async ({ id }: { id: string }) => {
-		try {
-			await roleService.remove({ id }).then((res) => {
+		await roleService
+			.remove({ id })
+			.then((res) => {
 				toast.success(res.message, {
 					position: "top-right",
 				});
+				return id;
+			})
+			.catch((err) => {
+				toast.error(`${err.message}`, {
+					position: "top-right",
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+					theme: "light",
+					transition: Bounce,
+				});
 			});
-			return id;
-		} catch (error) {
-			console.log(error);
-		}
 	},
 );
 
@@ -192,15 +203,6 @@ export const roleSlice = createSlice({
 			.addCase(addRole.fulfilled, (state) => {
 				state.edittingRole = null;
 				state.isLoading = false;
-			})
-
-			.addCase(removeRole.fulfilled, (state, action) => {
-				if (action.payload) {
-					const filterData = state.roles.filter(
-						(c) => c.id !== action.payload,
-					);
-					state.roles = filterData;
-				}
 			}),
 });
 

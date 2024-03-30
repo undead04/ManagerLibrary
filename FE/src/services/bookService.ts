@@ -56,7 +56,10 @@ const edit = ({ id, data }: { id: string; data: FormData }) => {
 const remove = ({ id }: { id: string }) => {
 	return api
 		.delete<ResponseWrapper<null>>(`${api.url.book}/${id}`)
-		.then((res) => res.data);
+		.then((res) => res.data)
+		.catch((err) => {
+			throw err.response.data;
+		});
 };
 
 const bookService = {

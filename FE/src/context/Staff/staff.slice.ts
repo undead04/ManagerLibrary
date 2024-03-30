@@ -182,14 +182,25 @@ export const updateStaff = createAsyncThunk(
 export const removeStaff = createAsyncThunk(
 	"staff/remove",
 	async ({ id }: { id: string }) => {
-		try {
-			staffService.remove({ id }).then((res) => {
+		await staffService
+			.remove({ id })
+			.then((res) => {
 				console.log(res);
+				return id;
+			})
+			.catch((err) => {
+				toast.error(`${err.message}`, {
+					position: "top-right",
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+					theme: "light",
+					transition: Bounce,
+				});
 			});
-			return id;
-		} catch (error) {
-			console.log(error);
-		}
 	},
 );
 
@@ -223,15 +234,6 @@ export const staffSlice = createSlice({
 			.addCase(addStaff.fulfilled, (state) => {
 				state.edittingStaff = null;
 				state.isLoading = false;
-			})
-
-			.addCase(removeStaff.fulfilled, (state, action) => {
-				if (action.payload) {
-					const filterData = state.staffs.filter(
-						(c) => c.id !== action.payload,
-					);
-					state.staffs = filterData;
-				}
 			}),
 });
 

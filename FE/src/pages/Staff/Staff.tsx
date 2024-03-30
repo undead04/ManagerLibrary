@@ -41,6 +41,10 @@ const Staff = () => {
 		(state: RootState) => state.staff.staffs,
 	);
 
+	const claims = useSelector(
+		(state: RootState) => state.auth.user?.claims,
+	);
+
 	const edittingstaff = useSelector(
 		(state: RootState) => state.staff.edittingStaff,
 	);
@@ -92,8 +96,8 @@ const Staff = () => {
 	const handleDelete = (id: string) => {
 		dispatch(removeStaff({ id }))
 			.unwrap()
-			.then((res) => {
-				console.log(res);
+			.then(() => {
+				dispatch(getStaffs({}));
 			});
 		setOpenDelete(false);
 	};
@@ -182,6 +186,7 @@ const Staff = () => {
 				return (
 					<div className="flex gap-2 items-center justify-center">
 						<Button
+							disabled={!claims?.isRoleRead}
 							onClick={() => handleStartEdit(id)}
 							className="text-blue-500 underline p-0 aspect-square flex items-center justify-center"
 						>

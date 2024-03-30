@@ -39,7 +39,6 @@ const Authorization = () => {
 		dispatch(getRole(id))
 			.unwrap()
 			.then((res) => {
-				console.log(res);
 				if (res) {
 					dispatch(startEdittingRole(res));
 				}
@@ -110,7 +109,7 @@ const Authorization = () => {
 	return (
 		<div>
 			<Modal
-				title="Delete a category"
+				title="Delete a role"
 				open={openDelete}
 				onOk={() => {
 					if (deleteId) {

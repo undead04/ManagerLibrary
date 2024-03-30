@@ -167,14 +167,34 @@ export const updateGuest = createAsyncThunk(
 export const removeGuest = createAsyncThunk(
 	"guest/remove",
 	async ({ id }: { id: string }) => {
-		try {
-			guestService.remove({ id }).then((res) => {
-				console.log(res);
+		await guestService
+			.remove({ id })
+			.then(() => {
+				toast.success(`Remove successfully`, {
+					position: "top-right",
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+					theme: "light",
+					transition: Bounce,
+				});
+			})
+			.catch((err) => {
+				toast.error(`${err.message}`, {
+					position: "top-right",
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+					theme: "light",
+					transition: Bounce,
+				});
 			});
-			return id;
-		} catch (error) {
-			console.log(error);
-		}
 	},
 );
 
@@ -208,15 +228,6 @@ export const guestSlice = createSlice({
 			.addCase(addGuest.fulfilled, (state) => {
 				state.edittingGuest = null;
 				state.isLoading = false;
-			})
-
-			.addCase(removeGuest.fulfilled, (state, action) => {
-				if (action.payload) {
-					const filterData = state.guests.filter(
-						(c) => c.id !== action.payload,
-					);
-					state.guests = filterData;
-				}
 			}),
 });
 

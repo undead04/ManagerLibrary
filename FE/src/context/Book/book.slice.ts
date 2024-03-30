@@ -182,14 +182,41 @@ export const updateBook = createAsyncThunk(
 export const removeBook = createAsyncThunk(
 	"book/remove",
 	async ({ id }: { id: string }) => {
-		try {
-			bookService.remove({ id }).then((res) => {
+		await bookService
+			.remove({ id })
+			.then((res) => {
 				console.log(res);
+			})
+			.then(() => {
+				toast.success("Delete successfully!", {
+					position: "top-center",
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+					theme: "light",
+					transition: Bounce,
+				});
+
+				return id;
+			})
+			.catch((err) => {
+				toast.error(`${err.message}`, {
+					position: "top-right",
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+					theme: "light",
+					transition: Bounce,
+				});
+
+				throw err;
 			});
-			return id;
-		} catch (error) {
-			console.log(error);
-		}
 	},
 );
 
@@ -223,17 +250,6 @@ export const bookSlice = createSlice({
 			.addCase(addBook.fulfilled, (state) => {
 				state.edittingBook = null;
 				state.isLoading = false;
-			})
-
-			.addCase(removeBook.fulfilled, (state, action) => {
-				if (action.payload) {
-					console.log(action.payload);
-
-					const filterData = state.books.filter(
-						(c) => c.id !== action.payload,
-					);
-					state.books = filterData;
-				}
 			}),
 });
 

@@ -84,8 +84,8 @@ const Guest = () => {
 	const handleDelete = (id: string) => {
 		dispatch(removeGuest({ id }))
 			.unwrap()
-			.then((res) => {
-				console.log(res);
+			.then(() => {
+				dispatch(getGuests({}));
 			});
 		setOpenDelete(false);
 	};

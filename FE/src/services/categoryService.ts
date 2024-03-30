@@ -53,7 +53,10 @@ const edit = ({
 const remove = ({ id }: { id: string }) => {
 	return api
 		.delete<ResponseWrapper<null>>(`${api.url.category}/${id}`)
-		.then((res) => res.data);
+		.then((res) => res.data)
+		.catch((err) => {
+			throw err.response.data;
+		});
 };
 
 const categoryService = {

@@ -1,25 +1,18 @@
 import {
-	Avatar,
 	Button,
 	DatePicker,
-	Descriptions,
 	Divider,
 	Form,
 	Input,
-	InputNumber,
 	Popover,
-	Select,
 	SelectProps,
-	Spin,
 	Table,
 	TableColumnsType,
 	Tour,
 	TourProps,
-	Transfer,
-	TransferProps,
 } from "antd";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { IBook } from "../../../type/book.type";
 import {
 	EyeOutlined,
@@ -44,6 +37,7 @@ import {
 import { IBorrowBookPost } from "../../../type";
 import { toast } from "react-toastify";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface DebounceSelectProps<ValueType = any>
 	extends Omit<
 		SelectProps<ValueType | ValueType[]>,
@@ -64,13 +58,6 @@ interface IBookEntry extends IBook {
 	key: React.Key;
 	index: number;
 	deadLineDate: string;
-}
-
-interface BookType {
-	key: string;
-	title: string;
-	description: string;
-	chosen: boolean;
 }
 
 const CouponAdd = () => {
@@ -302,7 +289,7 @@ const CouponAdd = () => {
 	const [selectedGuestId, setSelectedGuestId] = useState<string>("");
 	useEffect(() => {
 		dispatch(getBooks({}));
-		dispatch(getUnpaidBooks());
+		dispatch(getUnpaidBooks({}));
 		dispatch(getGuests({}));
 	}, [dispatch]);
 
@@ -323,9 +310,6 @@ const CouponAdd = () => {
 	}, [dispatch, selectedGuestId]);
 
 	const onFinish = () => {
-		console.log(filterEntryBooks);
-		console.log(selectedGuest);
-
 		const submitData: IBorrowBookPost = {
 			memberId: selectedGuestId,
 			transitionBookDetail: filterEntryBooks.map((f) => ({
@@ -346,7 +330,9 @@ const CouponAdd = () => {
 					setEntryBooks([]);
 					setSelectedGuestId("");
 					setSelectedGuest(null);
-					dispatch(getUnpaidBooks());
+					dispatch(getGuests({}));
+					dispatch(getBooks({}));
+					dispatch(getUnpaidBooks({}));
 				});
 		} else {
 			toast.info("Please choose books for the service");
