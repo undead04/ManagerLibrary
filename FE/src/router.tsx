@@ -18,6 +18,7 @@ import Authorization from "./pages/Authorization/Authorization";
 import BookEntry from "./pages/BookEntry/BookEntry";
 import NetWorkError from "./pages/ErrorPage/NetWorkError";
 import PageNotFound from "./pages/ErrorPage/PageNotFound";
+import BookEntryDetails from "./pages/BookEntry/BookEntryDetail";
 
 const router = createBrowserRouter([
 	{
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
 			{
 				path: "/book-entry",
 				element: <BookEntry />,
+			},
+			{
+				path: "/book-entry/d/:id",
+				element: <BookEntryDetails />,
 			},
 			{
 				path: "/book/d/:id",

@@ -19,7 +19,10 @@ import { getBook, getBooks } from "../../context/Book/book.slice";
 import { getGuests } from "../../context/Guest/guest.slice";
 import { SearchProps } from "antd/es/input";
 import { IBookEntryPost } from "../../type";
-import { addBookEntry } from "../../context/BookEntry/bookEntry.slice";
+import {
+	addBookEntry,
+	getBookEntries,
+} from "../../context/BookEntry/bookEntry.slice";
 
 const { Search } = Input;
 
@@ -276,6 +279,7 @@ const BookEntryForm = () => {
 				.unwrap()
 				.then(() => {
 					setEntryBooks([]);
+					dispatch(getBookEntries({}));
 				})
 				.catch((err) => console.log(err));
 		}

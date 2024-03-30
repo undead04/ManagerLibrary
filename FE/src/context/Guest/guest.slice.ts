@@ -68,7 +68,7 @@ export const addGuest = createAsyncThunk(
 			await guestService
 				.create({ data: frm })
 				.then(() => {
-					toast.success("Add books successfully", {
+					toast.success("Create successfully", {
 						position: "top-center",
 						autoClose: 5000,
 						hideProgressBar: false,

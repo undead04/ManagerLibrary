@@ -343,11 +343,6 @@ const StaffForm = (props: StaffFormProps) => {
 								Save
 							</Button>
 						</Form.Item>
-						<Form.Item>
-							<Button type="default" htmlType="reset" size="large">
-								Cancel
-							</Button>
-						</Form.Item>
 					</div>
 				</Form>
 			</div>

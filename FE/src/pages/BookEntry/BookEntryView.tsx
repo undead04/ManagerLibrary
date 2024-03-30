@@ -10,6 +10,7 @@ import { IBookEntryEntity } from "../../type";
 import { getBookEntries } from "../../context/BookEntry/bookEntry.slice";
 import formatDate from "../../utils/formatDate";
 import BookEntryPopover from "./BookEntryPopover";
+import { Link } from "react-router-dom";
 
 interface IBookEntryEntityExtend extends IBookEntryEntity {
 	key: React.Key;
@@ -71,13 +72,9 @@ const BookEntryView = () => {
 			render: (id: string) => {
 				return (
 					<div className="flex gap-2 items-center justify-center">
-						<Popover
-							placement="top"
-							title={"Book list"}
-							content={<BookEntryPopover id={id} />}
-						>
+						<Link to={`/book-entry/d/${id}`}>
 							<EyeOutlined />
-						</Popover>
+						</Link>
 					</div>
 				);
 			},

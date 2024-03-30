@@ -30,6 +30,7 @@ interface IBorrowBookDetails {
 	borrowDate: string;
 	status: string;
 	returnDate: string;
+	urlImage: string;
 	price: string;
 }
 export type {
