@@ -406,7 +406,6 @@ const CouponAdd = () => {
 									<Table
 										columns={columns}
 										dataSource={filteredData}
-										scroll={{ x: 600, y: 3000 }}
 										pagination={{
 											showTotal: (t) => <div>Totals: {t}</div>,
 											total: filteredData.length,
@@ -432,7 +431,6 @@ const CouponAdd = () => {
 										size="large"
 										columns={entryBookcolumns}
 										dataSource={filterEntryBooks}
-										scroll={{ x: 600, y: 3000 }}
 										pagination={{
 											showTotal: (t) => <div>Totals: {t}</div>,
 											total: entryBooks.length,
