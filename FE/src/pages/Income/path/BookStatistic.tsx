@@ -3,7 +3,6 @@ import {
 	Button,
 	DatePicker,
 	Form,
-	Image,
 	Input,
 	Popover,
 	Table,

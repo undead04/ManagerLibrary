@@ -111,7 +111,7 @@ const BookEntryForm = () => {
 		{
 			title: "",
 			dataIndex: "id",
-			render: (id: string, item) => {
+			render: (id: string) => {
 				return (
 					<div className="flex gap-2 items-center justify-center">
 						<Button className="p-0 aspect-square flex items-center justify-center">
@@ -123,10 +123,7 @@ const BookEntryForm = () => {
 							</Link>
 						</Button>
 						<Button
-							disabled={
-								!!entryBooks.find((e) => e.id === id) ||
-								item.presentQuantity === 0
-							}
+							disabled={!!entryBooks.find((e) => e.id === id)}
 							onClick={() => hanlePlus(id)}
 							className="text-blue-500 underline p-0 aspect-square flex items-center justify-center"
 						>
@@ -261,8 +258,6 @@ const BookEntryForm = () => {
 						console.log(prev);
 						return [...prev, res as IBook];
 					});
-
-					console.log(filterEntryBooks);
 				});
 		}
 	};

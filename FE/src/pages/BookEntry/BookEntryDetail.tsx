@@ -23,7 +23,8 @@ const BookEntryDetails = () => {
 	}, [id]);
 
 	const total = currentBookEntry.reduce(
-		(prev, cur) => (prev += parseFloat(cur.price)),
+		(prev, cur) =>
+			(prev += parseFloat(cur.price) * parseInt(cur.quantity)),
 		0,
 	);
 	return (
