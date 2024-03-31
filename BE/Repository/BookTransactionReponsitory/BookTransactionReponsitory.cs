@@ -78,6 +78,7 @@ namespace ManagerLibrary.Repository.BookTransactionReponsitory
                  BallotType = x.BallotType,
                  NameStaff = x.User!.UserName!,
                  NameMember = x.members!.Name,
+                 Create_At=x.Create_At,
                 
 
              }).ToListAsync();
@@ -132,6 +133,7 @@ namespace ManagerLibrary.Repository.BookTransactionReponsitory
                 NameMember = x.members!.Name,
                 Id = x.Id,
                 BallotType = x.BallotType,
+                Create_At=x.Create_At,
 
             }).ToList();
         }
@@ -160,7 +162,7 @@ namespace ManagerLibrary.Repository.BookTransactionReponsitory
                     var detail=await context.bookTransactionsDetail.Include(f=>f.Book)
                         .Where(bo=>bo.Id==id).FirstOrDefaultAsync();
                     
-                    if(detail!=null)
+                    if(detail!=null&&detail.ReturnDate==DateTime.MinValue)
                     {
                         detail.ReturnDate = DateTime.Now.Date;
                         var booktranstionDetail = new BookTransactionDetail

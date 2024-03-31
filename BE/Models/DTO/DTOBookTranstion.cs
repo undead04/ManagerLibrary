@@ -10,6 +10,7 @@ namespace ManagerLibrary.Model.DTO
         public string NameMember { get; set; }=string.Empty;
         public int MemebrId { get; set; }
         public string BallotType { get; set; } = string.Empty;
+        public DateTime Create_At { get; set; }
        
        
     }

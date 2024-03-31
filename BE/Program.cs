@@ -63,7 +63,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(option =>
     option.Password.RequireUppercase = false;
     option.Password.RequireNonAlphanumeric = false;
     option.Password.RequireDigit = false;
-    
+    option.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@ầằềềờớừửừữặẫẳếềẹễếựửồổõờớồộổỏơớọỏờớườừốửồụủưứứỷỳỹ";
+
 }).AddEntityFrameworkStores<MyDb>();
 
 
