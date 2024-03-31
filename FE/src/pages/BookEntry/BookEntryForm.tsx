@@ -9,6 +9,7 @@ import {
 	InputNumber,
 	Table,
 	TableColumnsType,
+	Tooltip,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -60,14 +61,21 @@ const BookEntryForm = () => {
 			dataIndex: "index",
 			align: "center",
 			key: "index",
-			fixed: "left",
 		},
 
 		{
 			title: "ISBN Id",
 			dataIndex: "isbn",
 			key: "isbn",
-			fixed: "left",
+			render: (isbn: string) => {
+				return (
+					<Tooltip title={isbn}>
+						<div className="max-w-[100px] text-wrap line-clamp-1">
+							{isbn}
+						</div>
+					</Tooltip>
+				);
+			},
 		},
 		{
 			title: "Title",
@@ -75,7 +83,11 @@ const BookEntryForm = () => {
 			sorter: (a, b) => a.title.localeCompare(b.title),
 			render: (title: string) => {
 				return (
-					<div className="max-w-[300px] line-clamp-2">{title}</div>
+					<Tooltip title={title}>
+						<div className="max-w-[100px] text-wrap line-clamp-1">
+							{title}
+						</div>
+					</Tooltip>
 				);
 			},
 			key: "title",
@@ -84,11 +96,13 @@ const BookEntryForm = () => {
 			title: "Author",
 			dataIndex: "author",
 			sorter: (a, b) => a.author.localeCompare(b.author),
-			render: (title: string) => {
+			render: (author: string) => {
 				return (
-					<div className="max-w-[300px] text-wrap line-clamp-2">
-						{title}
-					</div>
+					<Tooltip title={author}>
+						<div className="max-w-[100px] text-wrap line-clamp-1">
+							{author}
+						</div>
+					</Tooltip>
 				);
 			},
 			key: "author",
@@ -97,8 +111,7 @@ const BookEntryForm = () => {
 		{
 			title: "",
 			dataIndex: "id",
-			align: "end",
-			render: (id: string) => {
+			render: (id: string, item) => {
 				return (
 					<div className="flex gap-2 items-center justify-center">
 						<Button className="p-0 aspect-square flex items-center justify-center">
@@ -110,7 +123,10 @@ const BookEntryForm = () => {
 							</Link>
 						</Button>
 						<Button
-							disabled={!!entryBooks.find((e) => e.id === id)}
+							disabled={
+								!!entryBooks.find((e) => e.id === id) ||
+								item.presentQuantity === 0
+							}
 							onClick={() => hanlePlus(id)}
 							className="text-blue-500 underline p-0 aspect-square flex items-center justify-center"
 						>
@@ -120,7 +136,6 @@ const BookEntryForm = () => {
 				);
 			},
 			key: "id",
-			fixed: "right",
 		},
 	];
 
@@ -139,6 +154,15 @@ const BookEntryForm = () => {
 			dataIndex: "isbn",
 			key: "isbn",
 			fixed: "left",
+			render: (isbn: string) => {
+				return (
+					<Tooltip title={isbn}>
+						<div className="max-w-[100px] text-wrap line-clamp-1">
+							{isbn}
+						</div>
+					</Tooltip>
+				);
+			},
 		},
 		{
 			title: "Title",
@@ -146,7 +170,11 @@ const BookEntryForm = () => {
 			sorter: (a, b) => a.title.localeCompare(b.title),
 			render: (title: string) => {
 				return (
-					<div className="max-w-[300px] line-clamp-2">{title}</div>
+					<Tooltip title={title}>
+						<div className="max-w-[100px] text-wrap line-clamp-1">
+							{title}
+						</div>
+					</Tooltip>
 				);
 			},
 			key: "title",
@@ -260,7 +288,7 @@ const BookEntryForm = () => {
 			return {
 				...e,
 				key: e.id,
-				index,
+				index: index + 1,
 			};
 		},
 	);
@@ -294,7 +322,7 @@ const BookEntryForm = () => {
 				<div className="grid grid-cols-2 gap-8">
 					<div>
 						{!isLoading && (
-							<div className="space-y-4 shadow-md p-4">
+							<div className="space-y-4 shadow-md p-4 overflow-x-scroll">
 								<div className="text-xl font-semibold">
 									Select books to entry
 								</div>
@@ -320,7 +348,7 @@ const BookEntryForm = () => {
 					</div>
 					<div>
 						{!isLoading && (
-							<div className="space-y-4 shadow-md p-4">
+							<div className="space-y-4 shadow-md p-4 h-full overflow-x-scroll">
 								<div className="text-xl font-semibold">
 									Choosed books
 								</div>

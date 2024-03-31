@@ -8,6 +8,7 @@ import {
 	SelectProps,
 	Table,
 	TableColumnsType,
+	Tooltip,
 	Tour,
 	TourProps,
 } from "antd";
@@ -36,6 +37,7 @@ import {
 } from "../../../context/BorrowBook/borrowBook.slice";
 import { IBorrowBookPost } from "../../../type";
 import { toast } from "react-toastify";
+import { getBorrowBooks } from "./../../../context/BorrowBook/borrowBook.slice";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface DebounceSelectProps<ValueType = any>
@@ -74,7 +76,7 @@ const CouponAdd = () => {
 			return {
 				...e,
 				key: e.id,
-				index,
+				index: index + 1,
 				deadLineDate: new Date().toISOString(),
 			};
 		},
@@ -119,14 +121,21 @@ const CouponAdd = () => {
 			dataIndex: "index",
 			align: "center",
 			key: "index",
-			fixed: "left",
 		},
 
 		{
 			title: "ISBN Id",
 			dataIndex: "isbn",
 			key: "isbn",
-			fixed: "left",
+			render: (isbn: string) => {
+				return (
+					<Tooltip title={isbn}>
+						<div className="max-w-[100px] text-wrap line-clamp-1">
+							{isbn}
+						</div>
+					</Tooltip>
+				);
+			},
 		},
 		{
 			title: "Title",
@@ -134,7 +143,11 @@ const CouponAdd = () => {
 			sorter: (a, b) => a.title.localeCompare(b.title),
 			render: (title: string) => {
 				return (
-					<div className="max-w-[300px] line-clamp-2">{title}</div>
+					<Tooltip title={title}>
+						<div className="max-w-[100px] text-wrap line-clamp-1">
+							{title}
+						</div>
+					</Tooltip>
 				);
 			},
 			key: "title",
@@ -143,11 +156,13 @@ const CouponAdd = () => {
 			title: "Author",
 			dataIndex: "author",
 			sorter: (a, b) => a.author.localeCompare(b.author),
-			render: (title: string) => {
+			render: (author: string) => {
 				return (
-					<div className="max-w-[300px] text-wrap line-clamp-2">
-						{title}
-					</div>
+					<Tooltip title={author}>
+						<div className="max-w-[100px] text-wrap line-clamp-1">
+							{author}
+						</div>
+					</Tooltip>
 				);
 			},
 			key: "author",
@@ -156,7 +171,6 @@ const CouponAdd = () => {
 		{
 			title: "",
 			dataIndex: "id",
-			align: "end",
 			render: (id: string, item) => {
 				return (
 					<div className="flex gap-2 items-center justify-center">
@@ -182,7 +196,6 @@ const CouponAdd = () => {
 				);
 			},
 			key: "id",
-			fixed: "right",
 		},
 	];
 
@@ -192,7 +205,6 @@ const CouponAdd = () => {
 			dataIndex: "index",
 			align: "center",
 			key: "index",
-			fixed: "left",
 			width: 70,
 		},
 
@@ -200,7 +212,15 @@ const CouponAdd = () => {
 			title: "ISBN Id",
 			dataIndex: "isbn",
 			key: "isbn",
-			fixed: "left",
+			render: (isbn: string) => {
+				return (
+					<Tooltip title={isbn}>
+						<div className="max-w-[100px] text-wrap line-clamp-1">
+							{isbn}
+						</div>
+					</Tooltip>
+				);
+			},
 		},
 		{
 			title: "Title",
@@ -208,7 +228,11 @@ const CouponAdd = () => {
 			sorter: (a, b) => a.title.localeCompare(b.title),
 			render: (title: string) => {
 				return (
-					<div className="max-w-[300px] line-clamp-2">{title}</div>
+					<Tooltip title={title}>
+						<div className="max-w-[100px] text-wrap line-clamp-1">
+							{title}
+						</div>
+					</Tooltip>
 				);
 			},
 			key: "title",
@@ -227,9 +251,6 @@ const CouponAdd = () => {
 								);
 								if (e) {
 									const newDeadLineDate = e.toISOString();
-
-									console.log(newDeadLineDate);
-
 									filterEntryBooks[index].deadLineDate =
 										newDeadLineDate;
 								}
@@ -258,7 +279,6 @@ const CouponAdd = () => {
 				);
 			},
 			key: "id",
-			fixed: "right",
 		},
 	];
 
@@ -295,7 +315,6 @@ const CouponAdd = () => {
 
 	const onSearchGuests: SearchProps["onSearch"] = (value) => {
 		dispatch(getGuests({ q: value }));
-		console.log(guests);
 	};
 
 	const reloadGuests = () => {
@@ -333,6 +352,7 @@ const CouponAdd = () => {
 					dispatch(getGuests({}));
 					dispatch(getBooks({}));
 					dispatch(getUnpaidBooks({}));
+					dispatch(getBorrowBooks({}));
 				});
 		} else {
 			toast.info("Please choose books for the service");
@@ -393,7 +413,10 @@ const CouponAdd = () => {
 					<div className="grid grid-cols-2 gap-8">
 						<div>
 							{!isLoading && (
-								<div className="space-y-4 shadow-md p-4" ref={ref1}>
+								<div
+									className="space-y-4 shadow-md p-4 overflow-x-scroll"
+									ref={ref1}
+								>
 									<div className="text-xl font-semibold">
 										Select books to entry
 									</div>
@@ -446,10 +469,6 @@ const CouponAdd = () => {
 								className="space-y-8 rounded-md shadow-md p-4 flex-1"
 								ref={ref3}
 							>
-								<div className="font-bold text-xl">
-									Member Information
-								</div>
-
 								<div className="space-y-4">
 									<div className="flex justify-between items-center">
 										<div className="text-lg font-semibold">

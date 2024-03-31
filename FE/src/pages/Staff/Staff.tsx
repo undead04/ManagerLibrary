@@ -129,12 +129,23 @@ const Staff = () => {
 			title: "Avatar",
 			dataIndex: "urlAvatar",
 			align: "center",
-			render: (url: string) => {
+			render: (url: string, item) => {
 				return (
 					<div className="mx-auto w-fit">
-						<div className="w-12 aspect-video">
-							<Image src={url} alt="url" />
-						</div>
+						{url && (
+							<img
+								className="w-[40px] aspect-square object-fill rounded-full"
+								alt={item.userName}
+								src={url}
+							/>
+						)}
+						{!url && (
+							<img
+								className="w-[40px] aspect-square object-fill rounded-full"
+								alt={item.userName}
+								src={"/login-face.jpeg"}
+							/>
+						)}
 					</div>
 				);
 			},
@@ -193,6 +204,7 @@ const Staff = () => {
 							<EditOutlined />
 						</Button>
 						<Button
+							disabled={!claims?.isStaffDelete}
 							className="text-red-500 underline p-0 aspect-square flex items-center justify-center"
 							onClick={() => handleStartDelete(id)}
 						>
@@ -254,16 +266,18 @@ const Staff = () => {
 					</Button>
 				</div>
 
-				<div>
-					<Button
-						size="large"
-						type="primary"
-						icon={<PlusCircleOutlined />}
-						onClick={showModal}
-					>
-						Add
-					</Button>
-				</div>
+				{claims?.isStaffEditAndCreate && (
+					<div>
+						<Button
+							size="large"
+							type="primary"
+							icon={<PlusCircleOutlined />}
+							onClick={showModal}
+						>
+							Add
+						</Button>
+					</div>
+				)}
 			</div>
 			<div className="mb-4">
 				<Search

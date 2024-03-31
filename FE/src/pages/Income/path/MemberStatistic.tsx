@@ -7,7 +7,6 @@ import {
 	Button,
 	DatePicker,
 	Form,
-	Image,
 	Input,
 	Popover,
 	Table,
@@ -81,12 +80,23 @@ const MemberStatistic = () => {
 			title: "Avatar",
 			dataIndex: "urlImage",
 			align: "center",
-			render: (url: string) => {
+			render: (url: string, item) => {
 				return (
 					<div className="mx-auto w-fit">
-						<div className="w-12 aspect-video">
-							<Image src={url} alt={"url"} />
-						</div>
+						{url && (
+							<img
+								className="w-[40px] aspect-square object-fill rounded-full"
+								alt={item.name}
+								src={url}
+							/>
+						)}
+						{!url && (
+							<img
+								className="w-[40px] aspect-square object-fill rounded-full"
+								alt={item.name}
+								src={"/login-face.jpeg"}
+							/>
+						)}
 					</div>
 				);
 			},
@@ -95,7 +105,7 @@ const MemberStatistic = () => {
 			title: "Name",
 			dataIndex: "name",
 			render: (name: string, item) => (
-				<Link to={`guests/d/${item.id}`}>{name}</Link>
+				<Link to={`/guest/d/${item.id}`}>{name}</Link>
 			),
 			sorter: (a, b) => a.name.localeCompare(b.name),
 		},
@@ -106,6 +116,7 @@ const MemberStatistic = () => {
 		{
 			title: "Address",
 			dataIndex: "address",
+			sorter: (a, b) => a.address.localeCompare(b.address),
 		},
 		{
 			title: "Gender",

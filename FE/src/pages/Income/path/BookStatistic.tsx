@@ -83,12 +83,23 @@ const BookStatistic = () => {
 			title: "Avatar",
 			dataIndex: "urlImage",
 			align: "center",
-			render: (url: string) => {
+			render: (url: string, item) => {
 				return (
 					<div className="mx-auto w-fit">
-						<div className="w-12 aspect-video">
-							<Image src={url} alt="url" />
-						</div>
+						{url && (
+							<img
+								className="w-[40px] aspect-square object-fill"
+								alt={item.title}
+								src={url}
+							/>
+						)}
+						{!url && (
+							<img
+								className="w-[40px] aspect-square object-fill"
+								alt={item.title}
+								src={"/login-face.jpeg"}
+							/>
+						)}
 					</div>
 				);
 			},

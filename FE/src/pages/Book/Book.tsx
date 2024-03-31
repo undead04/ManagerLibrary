@@ -52,6 +52,10 @@ const Book = () => {
 		(state: RootState) => state.book.isLoading,
 	);
 
+	const claims = useSelector(
+		(state: RootState) => state.auth.user?.claims,
+	);
+
 	const filteredData: IBookExtend[] = books.map((b, index) => {
 		return {
 			...b,
@@ -125,12 +129,23 @@ const Book = () => {
 			title: "Image",
 			dataIndex: "urlImage",
 			align: "center",
-			render: (url: string) => {
+			render: (url: string, item) => {
 				return (
 					<div className="mx-auto w-fit">
-						<div className="w-12 aspect-video">
-							<Image src={url} alt="url" />
-						</div>
+						{url && (
+							<img
+								className="w-[40px] aspect-square object-fill rounded-full"
+								alt={item.title}
+								src={url}
+							/>
+						)}
+						{!url && (
+							<img
+								className="w-[40px] aspect-square object-fill rounded-full"
+								alt={item.title}
+								src={"/login-face.jpeg"}
+							/>
+						)}
 					</div>
 				);
 			},
@@ -190,12 +205,14 @@ const Book = () => {
 							</Link>
 						</Button>
 						<Button
+							disabled={!claims?.isBookEditAndCreate}
 							onClick={() => handleStartEdit(id)}
 							className="text-blue-500 underline p-0 aspect-square flex items-center justify-center"
 						>
 							<EditOutlined />
 						</Button>
 						<Button
+							disabled={!claims?.isBookDelete}
 							className="text-red-500 underline p-0 aspect-square flex items-center justify-center"
 							onClick={() => handleStartDelete(id)}
 						>
@@ -260,6 +277,7 @@ const Book = () => {
 
 				<div>
 					<Button
+						disabled={!claims?.isBookEditAndCreate}
 						size="large"
 						type="primary"
 						icon={<PlusCircleOutlined />}

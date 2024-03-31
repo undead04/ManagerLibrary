@@ -20,6 +20,7 @@ import {
 	startEdittingGuest,
 } from "../../context/Guest/guest.slice";
 import GuestForm from "./GuestForm";
+import { Link } from "react-router-dom";
 
 const { Search } = Input;
 interface GuestExtend extends IGuest {
@@ -38,6 +39,10 @@ const Guest = () => {
 	);
 	const isLoading = useSelector(
 		(state: RootState) => state.guest.isLoading,
+	);
+
+	const claims = useSelector(
+		(state: RootState) => state.auth.user?.claims,
 	);
 
 	const filteredData: GuestExtend[] = guests.map((g, index) => {
@@ -102,8 +107,29 @@ const Guest = () => {
 
 	const columns: TableColumnsType<GuestExtend> = [
 		{
+			title: "#",
+			dataIndex: "index",
+			align: "center",
+		},
+		{
+			title: "Avatar",
+			dataIndex: "urlImage",
+			render: (url: string, item) => (
+				<div>
+					<img
+						className="w-[40px] aspect-square object-fill rounded-full"
+						alt={item.name}
+						src={url}
+					/>
+				</div>
+			),
+		},
+		{
 			title: "Username",
 			dataIndex: "name",
+			render: (name: string, item) => (
+				<Link to={`/guest/d/${item.id}`}>{name}</Link>
+			),
 			sorter: (a, b) => a.name.localeCompare(b.name),
 		},
 		{
@@ -151,12 +177,14 @@ const Guest = () => {
 				return (
 					<div className="flex gap-2 items-center justify-center">
 						<Button
+							disabled={!claims?.isMemberEditAndCreate}
 							onClick={() => handleStartEdit(id)}
 							className="text-blue-500 underline p-0 aspect-square flex items-center justify-center"
 						>
 							<EditOutlined />
 						</Button>
 						<Button
+							disabled={!claims?.isMemberDelete}
 							className="text-red-500 underline p-0 aspect-square flex items-center justify-center"
 							onClick={() => handleStartDelete(id)}
 						>
@@ -168,9 +196,8 @@ const Guest = () => {
 		},
 	];
 
-	const onSearch: SearchProps["onSearch"] = (value, _e, info) => {
+	const onSearch: SearchProps["onSearch"] = (value) => {
 		dispatch(getGuests({ q: value }));
-		console.log(info?.source, value);
 	};
 
 	return (
@@ -225,6 +252,7 @@ const Guest = () => {
 						type="primary"
 						icon={<PlusCircleOutlined />}
 						onClick={showModal}
+						disabled={!claims?.isMemberEditAndCreate}
 					>
 						Add
 					</Button>

@@ -1,19 +1,8 @@
-import React, { useEffect, useState } from "react";
-import {
-	Alert,
-	Button,
-	Input,
-	Popover,
-	Segmented,
-	Spin,
-	Table,
-	Tag,
-} from "antd";
+import React, { useEffect } from "react";
+import { Alert, Button, Popover, Spin, Table, Tag } from "antd";
 import type { TableColumnsType } from "antd";
-import { Link } from "react-router-dom";
 import { EyeOutlined } from "@ant-design/icons";
 
-import type { SearchProps } from "antd/es/input/Search";
 import { RootState, useAppDispatch } from "../../context/store";
 import { useSelector } from "react-redux";
 
@@ -22,7 +11,6 @@ import { getBorrowBooks } from "../../context/BorrowBook/borrowBook.slice";
 import NoReturnBookPopover from "./NoReturnBookPopover";
 import { getGuests } from "../../context/Guest/guest.slice";
 import { getStaffs } from "../../context/Staff/staff.slice";
-const { Search } = Input;
 interface BorrowBookExtend extends IBorrowBookEntity {
 	key: React.Key;
 	index: number;

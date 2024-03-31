@@ -34,6 +34,11 @@ const Category = () => {
 	const isLoading = useSelector(
 		(state: RootState) => state.category.isLoading,
 	);
+
+	const claims = useSelector(
+		(state: RootState) => state.auth.user?.claims,
+	);
+
 	const filterData: ExtendedCategory[] = categorys.map(
 		(c, index) => ({
 			...c,
@@ -109,12 +114,14 @@ const Category = () => {
 				return (
 					<div className="flex gap-2 items-center">
 						<Button
+							disabled={!claims?.isCategoryEditAndCreate}
 							onClick={() => handleStartEdit(item)}
 							className="text-blue-500 underline p-0 aspect-square flex items-center justify-center"
 						>
 							<EditOutlined />
 						</Button>
 						<Button
+							disabled={!claims?.isCategoryDelete}
 							className="text-red-500 underline p-0 aspect-square flex items-center justify-center"
 							onClick={() => handleStartDelete(id)}
 						>
@@ -176,6 +183,7 @@ const Category = () => {
 
 						<div>
 							<Button
+								disabled={!claims?.isCategoryEditAndCreate}
 								size="large"
 								type="primary"
 								icon={<PlusCircleOutlined />}

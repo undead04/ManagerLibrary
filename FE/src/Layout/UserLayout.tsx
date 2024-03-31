@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
-import { Button, Flex, Layout, Tooltip, theme } from "antd";
+import { Button, Flex, Layout, Tag, Tooltip, theme } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -21,6 +21,10 @@ const UserLayout = () => {
 
 	const token = useSelector(
 		(state: RootState) => state.auth.user?.token,
+	);
+
+	const email = useSelector(
+		(state: RootState) => state.auth.user?.email,
 	);
 
 	useEffect(() => {
@@ -52,11 +56,19 @@ const UserLayout = () => {
 						<Sidebar />
 
 						<Content style={{ padding: "0 24px", minHeight: 280 }}>
-							<Flex align="center" justify="space-between">
+							<Flex align="center" justify="flex-end" gap={8}>
+								{email && (
+									<Tag
+										color="#2db7f5"
+										className="px-3 py-2 min-w-[60px] text-center font-semibold text-sm mb-8"
+									>
+										{email.split("@")[0]}
+									</Tag>
+								)}
 								<Tooltip title="Logout">
 									<Button
 										size="large"
-										className="ml-auto mb-8 p-3 flex items-center"
+										className="mb-8 p-3 flex items-center"
 										onClick={handleLogout}
 										type="primary"
 									>

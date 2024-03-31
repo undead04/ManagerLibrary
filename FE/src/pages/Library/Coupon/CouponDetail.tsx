@@ -1,9 +1,7 @@
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import {
 	Button,
 	Checkbox,
 	Descriptions,
-	Divider,
 	Image,
 	Modal,
 	Tag,
@@ -162,7 +160,7 @@ const CouponDetail = () => {
 									</Descriptions.Item>
 
 									<Descriptions.Item>
-										<div className="flex gap-2 items-center justify-between w-[500px]">
+										<div className="flex gap-2 items-center justify-between flex-1">
 											{n.status === "Đã quá hạn" ? (
 												<>
 													<Tag
