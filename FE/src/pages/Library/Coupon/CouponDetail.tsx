@@ -8,7 +8,7 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { RootState, useAppDispatch } from "../../../context/store";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
 	getBorrowBook,
 	returnBooks,
@@ -18,6 +18,7 @@ import formatDate from "../../../utils/formatDate";
 import { getGuest } from "../../../context/Guest/guest.slice";
 import IGuest from "../../../type/guest.type";
 import { useSelector } from "react-redux";
+import { formatCurrency } from "../../../utils/formatCurrency";
 
 const CouponDetail = () => {
 	const dispatch = useAppDispatch();
@@ -44,7 +45,6 @@ const CouponDetail = () => {
 				dispatch(getBorrowBook(id))
 					.unwrap()
 					.then((res: unknown) => {
-						console.log(res);
 						setNoreturnBooks(res as IBorrowBookDetails[]);
 					});
 			}
@@ -104,9 +104,20 @@ const CouponDetail = () => {
 	};
 
 	const handleCheckBorrowAll = () => {
-		const data = noreturnBooks.map((n) => n.id);
-		setSelectedBorrowBooks(data);
-		setIsSelectedAll(true);
+		if (id) {
+			dispatch(getBorrowBook(id))
+				.unwrap()
+				.then((res) => {
+					if (res) {
+						const data = res.filter(
+							(n) => n.returnDate === "0001-01-01T00:00:00",
+						);
+						const ids = data.map((d) => d.id);
+						setSelectedBorrowBooks(ids);
+						setIsSelectedAll(true);
+					}
+				});
+		}
 	};
 
 	return (
@@ -121,7 +132,7 @@ const CouponDetail = () => {
 			</Modal>
 			{!isLoading && (
 				<div>
-					<div className="text-center text-4xl uppercase shadow font-semibold my-8 py-4">
+					<div className="text-center text-4xl uppercase shadow font-semibold my-8 py-4 text-white bg-blue-500">
 						Borrow book list
 					</div>
 					<div className="flex gap-2 justify-end px-3 py-2 my-4">
@@ -144,103 +155,116 @@ const CouponDetail = () => {
 							/>
 						</span>
 					</div>
-					<div>
+					<div className="mt-4">
 						<div className="divide-y-2">
 							{noreturnBooks.map((n) => (
-								<Descriptions
-									className="px-2"
-									title={`Title: ${n.nameBook}`}
-								>
-									<Descriptions.Item label="Image">
-										<Image width={200} src={n.urlImage} />
-									</Descriptions.Item>
+								<div>
+									<Descriptions
+										className="px-4 pt-8 hover:bg-slate-100"
+										title={
+											<Link
+												className="text-xl"
+												to={`/book/d/${n.bookId}`}
+											>
+												Title: {n.nameBook}
+											</Link>
+										}
+									>
+										<Descriptions.Item label="Image">
+											<Image width={200} src={n.urlImage} />
+										</Descriptions.Item>
 
-									<Descriptions.Item label="Price">
-										{n.price}
-									</Descriptions.Item>
+										<Descriptions.Item label="Price">
+											{formatCurrency(parseFloat(n.price))}
+										</Descriptions.Item>
 
-									<Descriptions.Item>
-										<div className="flex gap-2 items-center justify-between flex-1">
-											{n.status === "Đã quá hạn" ? (
-												<>
-													<Tag
-														className="p-2 rounded-lg"
-														color="#f50"
-													>
-														Đã quá hạn
-													</Tag>
-												</>
-											) : (
-												<>
-													<Tag
-														className="p-2 rounded-lg"
-														color="#108ee9"
-													>
-														{n.status}
-													</Tag>
-												</>
-											)}
+										<Descriptions.Item>
+											<div className="flex gap-2 items-center justify-between flex-1">
+												{n.status === "Đã quá hạn" ? (
+													<>
+														<Tag
+															className="p-2 rounded-lg"
+															color="#f50"
+														>
+															{n.status}
+														</Tag>
+													</>
+												) : (
+													<>
+														<Tag
+															className="p-2 rounded-lg"
+															color="#108ee9"
+														>
+															{n.status ? n.status : "No return"}
+														</Tag>
+													</>
+												)}
 
-											{n.returnDate === "0001-01-01T00:00:00" && (
-												<div className="px-2 py-1 border-2">
-													<Checkbox
-														checked={selectedBorrowBooks.includes(
-															n.id,
-														)}
-														onClick={() =>
-															handleCheckBorrowBooks(n.id)
-														}
-														type="primary"
-													/>
-												</div>
-											)}
-										</div>
-									</Descriptions.Item>
+												{n.returnDate === "0001-01-01T00:00:00" && (
+													<div className="px-2 py-1">
+														<Checkbox
+															checked={selectedBorrowBooks.includes(
+																n.id,
+															)}
+															onClick={() =>
+																handleCheckBorrowBooks(n.id)
+															}
+															type="primary"
+														/>
+													</div>
+												)}
+											</div>
+										</Descriptions.Item>
 
-									<Descriptions.Item label="Borrow date">
-										{formatDate(n.borrowDate)}
-									</Descriptions.Item>
-									<Descriptions.Item label="Borrow deadline">
-										{formatDate(n.deadLineDate)}
-									</Descriptions.Item>
-									<Descriptions.Item label="Return date">
-										{n.returnDate === "0001-01-01T00:00:00"
-											? "mm/dd/yyyy"
-											: formatDate(n.returnDate)}
-									</Descriptions.Item>
-									<Descriptions.Item label="Status">
-										{n.returnDate === "0001-01-01T00:00:00" ? "" : ""}
-									</Descriptions.Item>
-								</Descriptions>
+										<Descriptions.Item label="Borrow date">
+											{formatDate(n.borrowDate)}
+										</Descriptions.Item>
+										<Descriptions.Item label="Borrow deadline">
+											{formatDate(n.deadLineDate)}
+										</Descriptions.Item>
+										<Descriptions.Item label="Return date">
+											{n.returnDate === "0001-01-01T00:00:00"
+												? "mm/dd/yyyy"
+												: formatDate(n.returnDate)}
+										</Descriptions.Item>
+									</Descriptions>
+								</div>
 							))}
 						</div>
 
-						<div className="text-center text-4xl uppercase shadow font-semibold my-8 py-4">
+						<div className="text-center text-4xl uppercase shadow font-semibold my-8 py-4 text-white bg-blue-500">
 							Member info
 						</div>
-						<Descriptions>
-							<Descriptions.Item label="Avatar">
-								<Image.PreviewGroup
-									items={[
-										currentMember?.urlImage
-											? currentMember.urlImage
-											: "",
-									]}
-								>
-									<Image width={200} src={currentMember?.urlImage} />
-								</Image.PreviewGroup>
-							</Descriptions.Item>
-							<Descriptions.Item label="Username">
-								{currentMember?.name}
-							</Descriptions.Item>
-							<Descriptions.Item label="Phone number">
-								{currentMember?.phone}
-							</Descriptions.Item>
+						<Link to={`/guest/d/${currentMember?.id}`}>
+							<div>
+								<Descriptions className="p-4 hover:bg-slate-100">
+									<Descriptions.Item label="Avatar">
+										<Image.PreviewGroup
+											items={[
+												currentMember?.urlImage
+													? currentMember.urlImage
+													: "",
+											]}
+										>
+											<Image
+												width={200}
+												src={currentMember?.urlImage}
+											/>
+										</Image.PreviewGroup>
+									</Descriptions.Item>
+									<Descriptions.Item label="Username">
+										{currentMember?.name}
+									</Descriptions.Item>
+									<Descriptions.Item label="Phone number">
+										{currentMember?.phone}
+									</Descriptions.Item>
 
-							<Descriptions.Item label="Gender">
-								{currentMember?.gender ? "Male" : "Female"}
-							</Descriptions.Item>
-						</Descriptions>
+									<Descriptions.Item label="Gender">
+										{currentMember?.gender ? "Male" : "Female"}
+									</Descriptions.Item>
+								</Descriptions>
+							</div>
+						</Link>
 					</div>
 				</div>
 			)}
