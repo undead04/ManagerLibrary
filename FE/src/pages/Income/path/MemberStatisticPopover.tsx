@@ -36,7 +36,7 @@ const MemberStatisticPopover = ({ id }: { id: string }) => {
 									<div>{formatCurrency(parseFloat(n.price))} </div>
 								</div>
 								<div className="flex items-center gap-2">
-									<div>Quantity: </div>
+									<div>Deadline: </div>
 									<div>{formatDate(n.deadLineDate)} </div>
 								</div>
 								<div className="flex items-center gap-2">

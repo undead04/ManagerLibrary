@@ -38,6 +38,7 @@ import {
 import { IBorrowBookPost } from "../../../type";
 import { toast } from "react-toastify";
 import { getBorrowBooks } from "./../../../context/BorrowBook/borrowBook.slice";
+import convertToNextDayStartUTC from "../../../utils/convertToNextDayStartUTC";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface DebounceSelectProps<ValueType = any>
@@ -70,17 +71,8 @@ const CouponAdd = () => {
 	const unpaidBooks = useSelector(
 		(state: RootState) => state.borrowBook.unpaidBooks,
 	);
-	const [entryBooks, setEntryBooks] = useState<IBook[]>([]);
-	const filterEntryBooks: IBookEntry[] = entryBooks.map(
-		(e, index) => {
-			return {
-				...e,
-				key: e.id,
-				index: index + 1,
-				deadLineDate: new Date().toISOString(),
-			};
-		},
-	);
+	const [entryBooks, setEntryBooks] = useState<IBookEntry[]>([]);
+
 	const isLoading = useSelector(
 		(state: RootState) => state.book.isLoading,
 	);
@@ -100,11 +92,21 @@ const CouponAdd = () => {
 			dispatch(getBook(id))
 				.unwrap()
 				.then((res) => {
-					console.log(res);
-
 					setEntryBooks((prev) => {
-						console.log(prev);
-						return [...prev, res as IBook];
+						const prevData = [...prev];
+
+						if (res) {
+							const newEntry: IBookEntry = {
+								...(res as IBook),
+								key: res.id,
+								index: parseInt(res.id),
+								deadLineDate: new Date().toISOString(),
+							};
+
+							prevData.push(newEntry);
+						}
+
+						return prevData;
 					});
 				});
 		}
@@ -246,13 +248,19 @@ const CouponAdd = () => {
 						<DatePicker
 							// defaultValue={price}
 							onChange={(e) => {
-								const index = filterEntryBooks.findIndex(
+								const index = entryBooks.findIndex(
 									(fe) => fe.id === item.id,
 								);
 								if (e) {
-									const newDeadLineDate = e.toISOString();
-									filterEntryBooks[index].deadLineDate =
-										newDeadLineDate;
+									const newDeadLineDate = convertToNextDayStartUTC(
+										e.toISOString(),
+									);
+									const newFilterEntryBooks = [...entryBooks];
+									newFilterEntryBooks[index] = {
+										...newFilterEntryBooks[index],
+										deadLineDate: newDeadLineDate,
+									};
+									setEntryBooks(newFilterEntryBooks);
 								}
 							}}
 						/>
@@ -331,7 +339,7 @@ const CouponAdd = () => {
 	const onFinish = () => {
 		const submitData: IBorrowBookPost = {
 			memberId: selectedGuestId,
-			transitionBookDetail: filterEntryBooks.map((f) => ({
+			transitionBookDetail: entryBooks.map((f) => ({
 				bookId: f.id,
 				quantity: "1",
 				deadLineDate: f.deadLineDate,
@@ -453,7 +461,7 @@ const CouponAdd = () => {
 										className="h-auto"
 										size="large"
 										columns={entryBookcolumns}
-										dataSource={filterEntryBooks}
+										dataSource={entryBooks}
 										pagination={{
 											showTotal: (t) => <div>Totals: {t}</div>,
 											total: entryBooks.length,
